@@ -8,15 +8,29 @@
 
 
 	<div id="board">
-	<p> {{turn}} </p>
-	<br>
 	{{board|safe}}
+	<div id="status"> </div>
 	</div>
+	
 
 <script type="text/javascript">
 		var ab = {{bricks|safe}};
 		var white = ab.hb;
 		var black = ab.sb;
+		var game_over = 0;
+		check_status(game_over, "hvit");
+
+		function check_status(game_over, turn) {
+			var status = document.getElementById("status");
+			if (game_over == 0) {
+				status.innerHTML = "<p>" + turn + " spiller sin tur </p>";
+			} else if (game_over == 1) {
+				status.innerHTML = "<p>" + turn + " spiller vant!! </p>"; 
+			} else {
+				status.innerHTML = "<p>" + "Sjakk patt! Uavgjort </p>";
+			}
+
+		};
 
 		function move(from_p, to) {
 
@@ -25,6 +39,8 @@
 			xhttp.onreadystatechange = function() {
 				if (xhttp.readyState == 4 & xhttp.status == 200) {
 					ab = JSON.parse(xhttp.responseText);
+					console.log(ab.game_over);
+					check_status(ab.game_over, ab.turn);
 					clear();
 					positionPieces(ab.hb, "w");
 					positionPieces(ab.sb, "b");
