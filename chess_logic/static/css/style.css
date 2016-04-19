@@ -1,0 +1,37 @@
+.grid
+{
+	height:60px;
+	width:60px;
+	background-color: white;
+	position: relative;
+	margin:2px;
+	overflow: hidden;
+	display:inline-block;
+}
+
+#board
+{
+	text-align: center;
+}
+
+body
+{
+	background-color: black;
+}
+
+.white
+{
+	background-color: white;
+}
+
+.black
+{
+	background-color: grey;
+}
+
+.piece
+{
+	width:60px;
+	height:60px;
+	background-color: rgba(112, 112, 112, 0.5);
+}

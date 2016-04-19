@@ -1,0 +1,87 @@
+{% load staticfiles %}
+<head>
+	<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}" media="screen" />
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+</head>
+
+<body>
+
+
+	<div id="board">
+	<p> {{turn}} </p>
+	<br>
+	{{board|safe}}
+	</div>
+
+<script type="text/javascript">
+		var ab = {{bricks|safe}};
+		var white = ab.hb;
+		var black = ab.sb;
+
+		function move(from_p, to) {
+
+			var xhttp = new XMLHttpRequest(); 
+
+			xhttp.onreadystatechange = function() {
+				if (xhttp.readyState == 4 & xhttp.status == 200) {
+					ab = JSON.parse(xhttp.responseText);
+					clear();
+					positionPieces(ab.hb, "w");
+					positionPieces(ab.sb, "b");
+					initHandlers();
+				}
+			};
+
+			xhttp.open("GET", "?move="+from_p+to, true);
+			xhttp.send();
+		}
+
+		function clear() {
+			var ruter = document.getElementsByClassName("grid");
+			for (var i=0; i < ruter.length; i++) {
+				ruter[i].innerHTML = "";
+			}
+		}
+
+		function positionPieces(pieces, color) {
+			for (var piece in pieces) {
+				var rute = document.getElementById(piece);
+				rute.innerHTML = "<div class='piece'> <img src=/static/imgs/" + pieces[piece] + color + ".png></div>";
+			}
+		}
+
+
+		var from_square = null;
+
+		positionPieces(white, "w");
+		positionPieces(black, "b");
+		initHandlers();
+
+		function initHandlers() {
+			$(".grid").click(function(ev) {
+			if (ev.target.parentNode.classList[0] == "piece") {
+				return null;
+			}
+			if (from_square != null) {
+				to_square = ev.target.id;
+				move(from_square, to_square);
+				from_square = null;
+				to_square = null;
+			}
+			});
+
+			$(".piece").click(function(ev) {
+				var square = ev.target.parentNode.parentNode;
+				if (from_square == null) {
+					from_square = square.id;
+				} else {
+					to_square = square.id;
+					move(from_square, to_square);
+					from_square = null;
+					to_square = null;
+				}
+
+			});
+		}
+	</script>
+</body>
