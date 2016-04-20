@@ -43,7 +43,6 @@ def game(request):
 
     if 'move' in request.GET:
         this_move = request.GET['move']
-
         allb = ChessGame.objects.first()
         ab = json.loads(allb.ab)
         hb = ab['hb']
@@ -58,7 +57,6 @@ def game(request):
                     allb.turn = "b"
 
                 if checkmate(_sb, _hb, _hb, _sb):
-                    print "svart spiller sjakkmatt"
                     if check(_sb, _hb, _hb, _sb):
                         gameover = 1
                         allb.turn = "w"
@@ -74,7 +72,6 @@ def game(request):
                     allb.turn = "w"
 
                 if checkmate(_hb, _sb, _hb, _sb):
-                    print "hvit spiller sjakkmatt"
                     if check(_hb, _sb, _hb, _sb):
                         gameover = 1
                         allb.turn = "b"

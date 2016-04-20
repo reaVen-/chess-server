@@ -5,8 +5,6 @@
 </head>
 
 <body>
-
-
 	<div id="board">
 	{{board|safe}}
 	<div id="status"> </div>
@@ -18,7 +16,13 @@
 		var white = ab.hb;
 		var black = ab.sb;
 		var game_over = 0;
-		check_status(game_over, "hvit");
+		var turn = "{{turn|safe}}"
+		if (turn == "w") {
+			turn = "hvit";
+		} else {
+			turn = "svart":
+		}
+		check_status(game_over, turn);
 
 		function check_status(game_over, turn) {
 			var status = document.getElementById("status");
@@ -29,13 +33,10 @@
 			} else {
 				status.innerHTML = "<p>" + "Sjakk patt! Uavgjort </p>";
 			}
-
 		};
 
 		function move(from_p, to) {
-
 			var xhttp = new XMLHttpRequest(); 
-
 			xhttp.onreadystatechange = function() {
 				if (xhttp.readyState == 4 & xhttp.status == 200) {
 					ab = JSON.parse(xhttp.responseText);
@@ -62,7 +63,7 @@
 		function positionPieces(pieces, color) {
 			for (var piece in pieces) {
 				var rute = document.getElementById(piece);
-				rute.innerHTML = "<div class='piece'> <img src=/static/imgs/" + pieces[piece] + color + ".png></div>";
+				rute.innerHTML = "<div class='piece'><img src=/static/imgs/"+pieces[piece]+color+".png></div>";
 			}
 		}
 
