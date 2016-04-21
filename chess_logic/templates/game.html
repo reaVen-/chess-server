@@ -5,13 +5,14 @@
 </head>
 
 <body>
-	<div id="board">
-	{{board|safe}}
-	<div id="status"> </div>
+	
+	<div id="board"> 
+		<div id="status"> </div>
+		{{board|safe}} 
 	</div>
 	
 
-<script type="text/javascript">
+	<script type="text/javascript">
 		var ab = {{bricks|safe}};
 		var white = ab.hb;
 		var black = ab.sb;
@@ -20,7 +21,7 @@
 		if (turn == "w") {
 			turn = "hvit";
 		} else {
-			turn = "svart":
+			turn = "svart";
 		}
 		check_status(game_over, turn);
 
@@ -31,7 +32,7 @@
 			} else if (game_over == 1) {
 				status.innerHTML = "<p>" + turn + " spiller vant!! </p>"; 
 			} else {
-				status.innerHTML = "<p>" + "Sjakk patt! Uavgjort </p>";
+				status.innerHTML = "<p> Sjakk patt! Uavgjort </p>";
 			}
 		};
 
@@ -43,8 +44,6 @@
 					console.log(ab.game_over);
 					check_status(ab.game_over, ab.turn);
 					clear();
-					positionPieces(ab.hb, "w");
-					positionPieces(ab.sb, "b");
 					initHandlers();
 				}
 			};
@@ -67,24 +66,22 @@
 			}
 		}
 
-
 		var from_square = null;
-
-		positionPieces(white, "w");
-		positionPieces(black, "b");
 		initHandlers();
 
 		function initHandlers() {
+			positionPieces(white, "w");
+			positionPieces(black, "b");
 			$(".grid").click(function(ev) {
-			if (ev.target.parentNode.classList[0] == "piece") {
-				return null;
-			}
-			if (from_square != null) {
-				to_square = ev.target.id;
-				move(from_square, to_square);
-				from_square = null;
-				to_square = null;
-			}
+				if (ev.target.parentNode.classList[0] == "piece") {
+					return null;
+				}
+				if (from_square != null) {
+					to_square = ev.target.id;
+					move(from_square, to_square);
+					from_square = null;
+					to_square = null;
+				}
 			});
 
 			$(".piece").click(function(ev) {
@@ -97,7 +94,6 @@
 					from_square = null;
 					to_square = null;
 				}
-
 			});
 		}
 	</script>

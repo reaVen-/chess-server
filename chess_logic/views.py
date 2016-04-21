@@ -43,7 +43,7 @@ def game(request):
 
     if 'move' in request.GET:
         this_move = request.GET['move']
-        allb = ChessGame.objects.first()
+        allb = ChessGame.objects.last()
         ab = json.loads(allb.ab)
         hb = ab['hb']
         sb = ab['sb']
