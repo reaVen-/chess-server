@@ -92,7 +92,7 @@ def make_new(start, end, hb, sb):
         ob = sb.copy()
     elif start in sb:
         pb = sb.copy()
-        ob = hh.copy()
+        ob = hb.copy()
 
     pb[end] = pb[start]
     del pb[start]
@@ -120,6 +120,10 @@ def checkmate(pb, ob, hb, sb):
                 return False
     return True
 
+def pawn(choice):
+    d = {'D':'Dronning', 'T':'Trn', 'L':'Lper', 'H':'Hest'}
+    return d[choice]
+
 def move(pb, ob, start, end, hb, sb):
     """fix this function """
     if start not in pb:
@@ -134,7 +138,7 @@ def move(pb, ob, start, end, hb, sb):
             print("Du har muilighet til å forfremme bonden")
             print("D = Dronning\nT = Tårn\nL = Løper\nH = Hest\nB = Bonde")
             choice = ""
-            while choice not in ["D", "T", "L", "H", "B"]:
-                choice = input("Velg en:")
-            pb[end] = choice
+            while choice not in ["D", "T", "L", "H"]:
+                choice = raw_input("Velg en:")
+            pb[end] = pawn(choice)
     return pb, ob

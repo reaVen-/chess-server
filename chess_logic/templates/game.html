@@ -44,6 +44,8 @@
 					console.log(ab.game_over);
 					check_status(ab.game_over, ab.turn);
 					clear();
+					positionPieces(ab.hb, "w");
+					positionPieces(ab.sb, "b");
 					initHandlers();
 				}
 			};
@@ -67,11 +69,11 @@
 		}
 
 		var from_square = null;
+		positionPieces(white, "w");
+		positionPieces(black, "b");
 		initHandlers();
 
 		function initHandlers() {
-			positionPieces(white, "w");
-			positionPieces(black, "b");
 			$(".grid").click(function(ev) {
 				if (ev.target.parentNode.classList[0] == "piece") {
 					return null;
