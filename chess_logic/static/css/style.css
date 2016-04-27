@@ -12,19 +12,19 @@
 .replace
 {
 	height:60px;
-	width:60px;
-	background-color: white;
+	width:260px;
 	position: relative;
-	margin:2px;
 	overflow: hidden;
 	display:none;
+	background-color: white;
+	margin: 2px;
 }
 
 .rpiece
 {
+	background-color: white;
 	width:60px;
 	height:60px;
-	background-color: rgba(112, 112, 112, 0.5);
 }
 
 .selected

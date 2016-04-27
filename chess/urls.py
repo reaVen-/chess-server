@@ -15,11 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from chess_logic import views as chess_logic_views
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', "chess_logic.views.index", name="index"),
-    #url(r'^game/(?P<new_game>[0-9]+)', 'chess_logic.views.game', name="new_game"),
-    url(r'^game/', "chess_logic.views.game", name="game"),
+    url(r'^$', chess_logic_views.index, name="index"),
+    url(r'^game/', chess_logic_views.game, name="game"),
 ]
