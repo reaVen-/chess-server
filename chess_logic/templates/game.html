@@ -8,7 +8,19 @@
 	
 	<div id="board"> 
 		<div id="status"> </div>
-		{{board|safe}} 
+		{{board|safe}}
+		<div class="replace" id="replace_pawn_white">
+			<a class="rpiece" href="/game/?replace=D"><img src="/static/imgs/Dronningw.png"></a>
+			<a class="rpiece" href="/game/?replace=T"><img src="/static/imgs/Trnw.png"></a>
+			<a class="rpiece" href="/game/?replace=H"><img src="/static/imgs/Hestw.png"></a>
+			<a class="rpiece" href="/game/?replace=L"><img src="/static/imgs/Lperw.png"></a>
+		</div>
+		<div class="replace" id="replace_pawn_black">
+			<a class="rpiece" href="/game/?replace=D"><img src="/static/imgs/Dronningb.png"></a>
+			<a class="rpiece" href="/game/?replace=T"><img src="/static/imgs/Trnb.png"></a>
+			<a class="rpiece" href="/game/?replace=H"><img src="/static/imgs/Hestb.png"></a>
+			<a class="rpiece" href="/game/?replace=L"><img src="/static/imgs/Lperb.png"></a>
+		</div>
 	</div>
 	
 
@@ -25,6 +37,7 @@
 		}
 		check_status(game_over, turn);
 
+
 		function check_status(game_over, turn) {
 			var status = document.getElementById("status");
 			if (game_over == 0) {
@@ -35,6 +48,22 @@
 				status.innerHTML = "<p> Sjakk patt! Uavgjort </p>";
 			}
 		};
+
+		function replace_piece(turn, pawn_over) {
+			if (turn == "w") {
+				if (ab.pawn_over == true) {
+					$("#replace_pawn_white").css("display", "inline-block");
+				} else {
+					$("#replace_pawn_white").css("display", "none");
+				}
+			} else {
+				if (ab.pawn_over == true) {
+					$("#replace_pawn_black").css("display", "inline-block");
+				} else {
+					$("#replace_pawn_black").css("display", "none");
+				}
+		}
+		}
 
 		function move(from_p, to) {
 			var xhttp = new XMLHttpRequest(); 
@@ -47,6 +76,7 @@
 					positionPieces(ab.hb, "w");
 					positionPieces(ab.sb, "b");
 					initHandlers();
+					replace_piece(ab.turn, ab.pawn_over);
 				}
 			};
 

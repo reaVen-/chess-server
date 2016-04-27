@@ -5,7 +5,7 @@ from django.http import HttpResponse
 
 from chess_logic.models import ChessGame
 import json
-from chess_rules import init_bricks, move, checkmate, check
+from chess_rules import init_bricks, move, checkmate, check, pawn_over, replace_pawn
 
 def index(request):
     if "start_game" in request.POST:
@@ -41,9 +41,33 @@ def game(request):
         board_html = generate_board()
         ChessGame(ab=data, turn="w", game_over="0").save()
 
+    if 'replace' in request.GET:
+        replace = request.GET['replace']
+        allb = ChessGame.objects.last()
+        ab = json.loads(allb.ab)
+        hb = ab['hb']
+        sb = ab['sb']
+        print "here", allb.pawn_over
+        if allb.pawn_over and (replace in ["D", "H", "T", "L"]):
+            print "here"
+            if allb.turn == "w":
+                hb = replace_pawn(hb, replace)
+                allb.turn = "b"
+            else:
+                sb = replace_pawn(sb, replace)
+                allb.turn = "w"
+            allb.pawn_over = False
+        ab = {'hb':hb, 'sb':sb}
+        allb.ab = json.dumps(ab)
+        allb.save()
+
+
+
+
     if 'move' in request.GET:
         this_move = request.GET['move']
         allb = ChessGame.objects.last()
+
         ab = json.loads(allb.ab)
         hb = ab['hb']
         sb = ab['sb']
@@ -52,9 +76,13 @@ def game(request):
         if allb.turn == "w":
             if gameover == 0:
                 _hb, _sb = move(hb, sb, this_move[:2], this_move[2:], hb, sb)
-                ab = {'hb':_hb, 'sb':_sb}
                 if hb != _hb:
+                    ab = {'hb':_hb, 'sb':_sb}
                     allb.turn = "b"
+                    if pawn_over(_hb):
+                        print "pawn over"
+                        allb.pawn_over = True
+                        allb.turn = "w"
 
                 if checkmate(_sb, _hb, _hb, _sb):
                     if check(_sb, _hb, _hb, _sb):
@@ -67,9 +95,12 @@ def game(request):
         elif allb.turn == "b":
             if gameover == 0:
                 _sb, _hb = move(sb, hb, this_move[:2], this_move[2:], hb, sb)
-                ab = {'hb':_hb, 'sb':_sb}
                 if sb != _sb:
+                    ab = {'hb':_hb, 'sb':_sb}
                     allb.turn = "w"
+                    if pawn_over(_sb):
+                        allb.pawn_over = True
+                        allb.turn = "b"
 
                 if checkmate(_hb, _sb, _hb, _sb):
                     if check(_hb, _sb, _hb, _sb):
@@ -90,6 +121,7 @@ def game(request):
 
         ab['game_over'] = gameover
         ab['turn'] = turn;
+        ab['pawn_over'] = allb.pawn_over
         data = json.dumps(ab)
 
         return HttpResponse(data)
@@ -97,7 +129,7 @@ def game(request):
     if 'status' in request.GET:
         pass
 
-    all_b = ChessGame.objects.first()
+    all_b = ChessGame.objects.last()
     template = 'game.html'
     context = {'bricks':all_b.ab,
                 'board':generate_board(),

@@ -133,12 +133,23 @@ def move(pb, ob, start, end, hb, sb):
 
     _pb, _ob = make_new(start, end, hb, sb)
     if not check(_pb, _ob, hb, sb): #mistake here
-        pb, ob = make_new(start, end, hb, sb)
-        if end[1] == ("1" or "8") and pb[end][0] == "B":
-            print("Du har muilighet til å forfremme bonden")
-            print("D = Dronning\nT = Tårn\nL = Løper\nH = Hest\nB = Bonde")
-            choice = ""
-            while choice not in ["D", "T", "L", "H"]:
-                choice = raw_input("Velg en:")
-            pb[end] = pawn(choice)
+        pb, ob = _pb, _ob
+
     return pb, ob
+
+def pawn_over(pb):
+    """check if pawn is over"""
+    print pb
+    for pos in pb.keys():
+        if pos[1] in "18" and pb[pos] == "Bonde":
+            print "PAWN IS OVER"
+            return True
+    return False
+
+def replace_pawn(pb, choice):
+    """replace the pawn that has crossed over to the other side"""
+    print "in replace"
+    for pos in pb.keys():
+        if pos[1] in "18" and pb[pos] == "Bonde":
+            pb[pos] = pawn(choice)
+    return pb
