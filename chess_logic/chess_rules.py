@@ -9,7 +9,7 @@ def init_bricks():
 def brick_to_index(brick):
     return (int(brick[1])-((int(brick[1])-4)*2), ord(brick[0])-65)
 
-def index_to_brick(index):   
+def index_to_brick(index):
     return chr(index[1]+65)+str(8-index[0])
 
 def get_straight(brick):
@@ -28,11 +28,11 @@ def get_adjacent(brick):
     lower_l = [(x_pos+c, y_pos-c) for c in range(1, 8) if 0 <= x_pos+c <= 7 and 0 <= y_pos-c <= 7]
     return [upper_r, upper_l, lower_r, lower_l]
 
-def legal_moves(brick, pb, ob, hb, sb):
+def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False):
     """returns a list of legal moves from brick"""
     kind = pb.get(brick, "z")[0]
     index = brick_to_index(brick)
-    legal_moves = []
+    legal_moves_list = []
     if kind == "L":
         moves = get_adjacent(brick)
     elif kind == "D":
@@ -43,7 +43,62 @@ def legal_moves(brick, pb, ob, hb, sb):
         delta = [(-2, 1), (-2,-1), (2, 1), (2,-1), (1, 2), (-1, 2), (1, -2), (-1, -2)]
         moves =[[(x+index[0], y+index[1])] for x,y in delta if 0 <= x+index[0] <= 7 and 0 <= y+index[1] <= 7]
     elif kind == "K":
-        #should also make it possible to do a 'rokade'
+        #should also make it possible to do castling
+        #castle code
+        if castling_left or castling_right:
+            #check if its white turn
+            if hb == pb:
+                #check if left tower is there
+                if hb.get("A1", "") == "Trn" and castling_left:
+                    #check if path is clear for castling
+                    a = hb.get("B1", "") + hb.get("C1", "") + hb.get("D1", "")
+                    b = sb.get("B1", "") + sb.get("C1", "") + sb.get("D1", "")
+                    if a + b == "":
+                        #check if king can move without getting in chess
+                        _hb, _sb = make_new("E1", "D1", hb, sb)
+                        if not check(_hb, _sb, _hb, _sb):
+                            _hb, _sb = make_new("D1", "C1", _hb, _sb)
+                            if not check(_hb, _sb, _hb, _sb):
+                                legal_moves_list.append("C1")
+                #check if right tower is there
+                if hb.get("H1", "") == "Trn" and castling_right:
+                    #check if path is clear for castling
+                    a = hb.get("G1", "") + hb.get("F1", "")
+                    b = sb.get("G1", "") + sb.get("F1", "")
+                    if a + b == "":
+                        #check if king can move without getting in chess
+                        _hb, _sb = make_new("E1", "F1", hb, sb)
+                        if not check(_hb, _sb, _hb, _sb):
+                            _hb, _sb = make_new("F1", "G1", _hb, _sb)
+                            if not check(_hb, _sb, _hb, _sb):
+                                legal_moves_list.append("G1")
+            elif sb == pb:
+                #check if left tower is there
+                if sb.get("A8", "") == "Trn" and castling_left:
+                    #check if path is clear for castling
+                    a = hb.get("B8", "") + hb.get("C8", "") + hb.get("D8", "")
+                    b = sb.get("B8", "") + sb.get("C8", "") + sb.get("D8", "")
+                    if a + b == "":
+                        #check if king can move without getting in chess
+                        _sb, _hb = make_new("E8", "D8", hb, sb)
+                        if not check(_sb, _hb, _hb, _sb):
+                            _sb, _hb = make_new("D8", "C8", _hb, _sb)
+                            if not check(_sb, _hb, _hb, _sb):
+                                legal_moves_list.append("C8")
+                #check if right tower is there
+                if sb.get("H8", "") == "Trn" and castling_right:
+                    #check if path is clear for castling
+                    a = hb.get("G8", "") + hb.get("F8", "")
+                    b = sb.get("G8", "") + sb.get("F8", "")
+                    if a + b == "":
+                        #check if king can move without getting in chess
+                        _sb, _hb = make_new("E8", "F8", hb, sb)
+                        if not check(_sb, _hb, _hb, _sb):
+                            _sb, _hb = make_new("F8", "G8", _hb, _sb)
+                            if not check(_sb, _hb, _hb, _sb):
+                                legal_moves_list.append("G8")
+
+        #castle code
         delta = [(-1, 0),(1, 0),(1, 1),(0, 1),(-1, 1),(1, -1),(0, -1),(-1,-1)]
         moves =[[(x+index[0], y+index[1])] for x,y in delta if 0 <= x+index[0] <= 7 and 0 <= y+index[1] <= 7]
     elif kind == "B":
@@ -60,15 +115,15 @@ def legal_moves(brick, pb, ob, hb, sb):
         for x in attack:
             this_brick = index_to_brick(x)
             if this_brick in ob:
-                legal_moves.append(this_brick)
+                legal_moves_list.append(this_brick)
         for x in move:
             this_brick = index_to_brick(x)
             if this_brick in pb or this_brick in ob:
                 break
             else:
-                legal_moves.append(this_brick)
+                legal_moves_list.append(this_brick)
 
-        return legal_moves
+        return legal_moves_list
     else:
         return []
 
@@ -79,11 +134,11 @@ def legal_moves(brick, pb, ob, hb, sb):
                 break
             else:
                 if this_brick in ob:
-                    legal_moves.append(this_brick)
+                    legal_moves_list.append(this_brick)
                     break
-                legal_moves.append(this_brick)
+                legal_moves_list.append(this_brick)
 
-    return legal_moves
+    return legal_moves_list
 
 def make_new(start, end, hb, sb):
     """moves one piece and updates the dictionary"""
@@ -93,6 +148,21 @@ def make_new(start, end, hb, sb):
     elif start in sb:
         pb = sb.copy()
         ob = hb.copy()
+
+    #move tower if user is castling
+    if (start == "E8" or start == "E1") and pb[start] == "Konge":
+        if end == "G8":
+            pb["F8"] = "Trn"
+            del pb["H8"]
+        elif end == "C8":
+            pb["D8"] = "Trn"
+            del pb["A8"]
+        elif end == "G1":
+            pb["F1"] = "Trn"
+            del pb["H1"]
+        elif end == "C1":
+            pb["D1"] = "Trn"
+            del pb["A1"]
 
     pb[end] = pb[start]
     del pb[start]
@@ -124,11 +194,11 @@ def pawn(choice):
     d = {'D':'Dronning', 'T':'Trn', 'L':'Lper', 'H':'Hest'}
     return d[choice]
 
-def move(pb, ob, start, end, hb, sb):
+def move(pb, ob, start, end, hb, sb, castling_left=False, castling_right=False):
     """fix this function """
     if start not in pb:
         return pb, ob
-    if end not in legal_moves(start, pb, ob, hb, sb):
+    if end not in legal_moves(start, pb, ob, hb, sb, castling_left=castling_left, castling_right=castling_right):
         return pb, ob
 
     _pb, _ob = make_new(start, end, hb, sb)
