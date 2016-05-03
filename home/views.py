@@ -1,16 +1,23 @@
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from home.models import ChessUser
+from django import forms
 
 import hashlib
+
+class OpponentPicker(forms.Form):
+    choices = []
+    for user in ChessUser.objects.all():
+        choices.append((user.pk, user.username))
+    opponents = forms.ChoiceField(choices=choices)
 
 def login_or_create_user(username, password):
     #check if user is in database
     try:
         user = ChessUser.objects.get(username=username)
+        print "HHHHHEEEEERRRREEEE"
         #check if correct password
-        print user.password, password
-        if not user.password.hexdigest() == password:
+        if not user.password == password:
             user = None
     except:
         user = ChessUser(username=username, password=password)
@@ -54,5 +61,5 @@ def index(request):
             return redirect("/game/?continue_game=%d"%request.POST["continue_game"])
 
     template = 'home/index.html'
-    context = {}
+    context = {'opponent_picker_form':OpponentPicker,}
     return render_to_response(template, context, context_instance=RequestContext(request))

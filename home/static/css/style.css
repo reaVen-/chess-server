@@ -3,6 +3,17 @@
 	text-align: center;
 }
 
+select
+{
+	display:inline-block;
+}
+
+.select-opponent
+{
+	width:65%;
+	display: inline-block;
+}
+
 .black-player
 {
 	color:white;

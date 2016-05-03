@@ -42,13 +42,9 @@ def game(request):
         if random_int(1, 10) > 5:
             player1, player2 = player2, player1
 
-        #update request session
-        request.session['player1'] = player1
-        request.session['player2'] = player2
-
         ab = init_bricks()
         data = json.dumps(ab)
-        cg = ChessGame(ab=data, player1_pk=player1, player2_pk=player2)
+        cg = ChessGame(ab=data, player_white_pk=player1, player_black_pk=player2)
         cg.save()
         request.session['game_id'] = cg.pk
         return HttpResponseRedirect(redirect_to="/game/")

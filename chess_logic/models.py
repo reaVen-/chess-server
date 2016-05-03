@@ -7,8 +7,8 @@ class ChessGame(models.Model):
 	ab = models.CharField(max_length=1000)
 
 	#players
-	player1_pk = models.CharField(max_length=10)
-	player2_pk = models.CharField(max_length=10)
+	player_white_pk = models.CharField(max_length=10)
+	player_black_pk = models.CharField(max_length=10)
 
 	#game state
 	turn = models.CharField(max_length=1, default="w")
