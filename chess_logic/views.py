@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from chess_logic.models import ChessGame
 import json
@@ -27,16 +27,22 @@ def game(request):
     if 'new_game' in request.GET:
         #start a new game
         hb, sb = init_bricks()
-        game_over = 0
-        turn = "hvit"
-        ab = {'hb':hb, 'sb':sb, 'game_over':game_over, "turn":turn}
+        ab = {'hb':hb, 'sb':sb} #'game_over':game_over, "turn":turn}
         data = json.dumps(ab)
-        board_html = generate_board()
-        ChessGame(ab=data, turn="w", game_over="0").save()
+        cg = ChessGame(ab=data, turn="w", game_over="0")
+        cg.save()
+        request.session['game_id'] = cg.pk
+        return HttpResponseRedirect(redirect_to="/game/")
+
+    if 'contine_game' in request.GET:
+        #continue a game
+        game = ChessGame.objects.get(pk=request.GET['continue_game'])
+        request.session['game_id'] = game.pk
+
 
     if 'replace' in request.GET:
         replace = request.GET['replace']
-        allb = ChessGame.objects.last()
+        allb = ChessGame.objects.get(pk=request.session['game_id'])
         ab = json.loads(allb.ab)
         hb = ab['hb']
         sb = ab['sb']
@@ -175,7 +181,7 @@ def game(request):
     if 'status' in request.GET:
         pass
 
-    all_b = ChessGame.objects.last()
+    all_b = ChessGame.objects.get(pk=request.session['game_id'])
     template = 'game.html'
     context = {'bricks':all_b.ab,
                 'board':generate_board(),
