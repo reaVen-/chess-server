@@ -7,13 +7,6 @@ from chess_logic.models import ChessGame
 import json
 from chess_rules import init_bricks, move, checkmate, check, pawn_over, replace_pawn
 
-def index(request):
-    if "start_game" in request.POST:
-        return redirect("/game/?new_game=1")
-    template = 'index.html'
-    context = {}
-    return render_to_response(template, context, context_instance=RequestContext(request))
-
 def generate_board():
     counter = 0
     board_html = ""

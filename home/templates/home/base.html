@@ -1,0 +1,26 @@
+{% load staticfiles %}
+<html lang="en">
+<head>
+	<title> Chess! </title>
+	<link rel="shortcut icon" type="image/png" href="{% static "favicon.ico" %}"/>
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link type="text/css" rel="stylesheet" href="{% static "css/materialize.css" %}" media="screen"/>
+	<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}" media="screen" />
+</head>
+<body>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+
+	<nav>
+		<div class="nav-wrapper">
+			<a href="/" class="brand-logo center">Chess</a>
+		</div>
+	</nav>
+
+	{% block full %}
+	{% endblock %}
+</body>
+
+
+
