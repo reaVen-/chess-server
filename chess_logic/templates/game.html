@@ -1,11 +1,22 @@
+{% extends 'home/base.html' %}
 {% load staticfiles %}
-<head>
-	<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}" media="screen" />
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
-</head>
 
-<body>
-	
+{% block full %}
+<div class="col s3">
+	{% if request.session.player1 %}
+		<div class="white-player">
+			<div class="card white">
+				<div class="card-content">
+					<i class="material-icons">person</i>
+					<span>{{request.session.player1.username}}</span>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+	<span></span>
+</div>
+
+<div class="col s6">
 	<div id="board"> 
 		<div id="status"> </div>
 		{{board|safe}}
@@ -34,6 +45,7 @@
 			turn = "hvit";
 		} else {
 			turn = "svart";
+			poll(white, black);
 		}
 		check_status(game_over, turn);
 
@@ -65,18 +77,29 @@
 		}
 		}
 
+		function changeBoard(data) {
+			check_status(data.game_over, data.turn);
+			clear();
+			positionPieces(data.hb, "w");
+			positionPieces(data.sb, "b");
+			initHandlers();
+			replace_piece(ab.turn, ab.pawn_over);
+		}
+
+		function poll(hb, sb) {
+			setTimeout(function() {
+				$.ajax({url:"poll/", success: function(data) {
+					changeBoard(JSON.parse(data));
+				}, datatype: "json", complete: poll});
+			}, 3000);
+		};
+
 		function move(from_p, to) {
 			var xhttp = new XMLHttpRequest(); 
 			xhttp.onreadystatechange = function() {
 				if (xhttp.readyState == 4 & xhttp.status == 200) {
 					ab = JSON.parse(xhttp.responseText);
-					console.log(ab.game_over);
-					check_status(ab.game_over, ab.turn);
-					clear();
-					positionPieces(ab.hb, "w");
-					positionPieces(ab.sb, "b");
-					initHandlers();
-					replace_piece(ab.turn, ab.pawn_over);
+					changeBoard(ab)
 				}
 			};
 
@@ -129,4 +152,18 @@
 			});
 		}
 	</script>
-</body>
+</div>
+
+<div class="col s3">
+	{% if request.session.player2 %}
+		<div class="black-player">
+			<div class="card">
+				<div class="card-content black">
+					<i class="material-icons">person</i>
+					<span> {{request.session.player2.username}} </span>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+</div>
+{% endblock %}

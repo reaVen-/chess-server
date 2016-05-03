@@ -21,5 +21,6 @@ from home import views as home_views
 
 urlpatterns = [
     url(r'^$', home_views.index, name="index"),
+    url(r'^game/poll/', chess_logic_views.poll, name="poll"),
     url(r'^game/', chess_logic_views.game, name="game"),
 ]

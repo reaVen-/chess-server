@@ -4,7 +4,7 @@ def init_bricks():
           "A2":"Bonde", "B2":"Bonde", "C2":"Bonde", "D2":"Bonde", "E2":"Bonde", "F2":"Bonde", "G2":"Bonde", "H2":"Bonde"}
     sb = {"A8":"Trn", "B8":"Hest", "C8":"Lper","D8":"Dronning","E8":"Konge","F8":"Lper","G8":"Hest","H8":"Trn",
           "A7":"Bonde", "B7":"Bonde", "C7":"Bonde", "D7":"Bonde", "E7":"Bonde", "F7":"Bonde", "G7":"Bonde", "H7":"Bonde"}
-    return hb, sb
+    return {'hb':hb, 'sb':sb}
 
 def brick_to_index(brick):
     return (int(brick[1])-((int(brick[1])-4)*2), ord(brick[0])-65)
@@ -209,16 +209,13 @@ def move(pb, ob, start, end, hb, sb, castling_left=False, castling_right=False):
 
 def pawn_over(pb):
     """check if pawn is over"""
-    print pb
     for pos in pb.keys():
         if pos[1] in "18" and pb[pos] == "Bonde":
-            print "PAWN IS OVER"
             return True
     return False
 
 def replace_pawn(pb, choice):
     """replace the pawn that has crossed over to the other side"""
-    print "in replace"
     for pos in pb.keys():
         if pos[1] in "18" and pb[pos] == "Bonde":
             pb[pos] = pawn(choice)

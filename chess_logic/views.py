@@ -2,6 +2,7 @@
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
+from random import randint as random_int
 
 from chess_logic.models import ChessGame
 import json
@@ -22,14 +23,32 @@ def generate_board():
         board_html += "<br>"
     return board_html
 
+def poll(request):
+    if 'game_id' in request.session:
+        game_data = ChessGame.objects.get(pk=request.session['game_id'])
+        ab = json.loads(game_data.ab)
+        data = {'hb':ab['hb'], 'sb':ab['sb'], 'game_over':game_data.game_over,
+        'turn':game_data.turn, 'pawn_over':game_data.pawn_over}
+        return HttpResponse(json.dumps(data))
+
 
 def game(request):
     if 'new_game' in request.GET:
         #start a new game
-        hb, sb = init_bricks()
-        ab = {'hb':hb, 'sb':sb} #'game_over':game_over, "turn":turn}
+        player1 = request.session.get("player1", "ANONYMOUS")
+        player2 = request.session.get("player2", "ANONYMOUS")
+
+        #player1 is white, swap then randomly before assigning
+        if random_int(1, 10) > 5:
+            player1, player2 = player2, player1
+
+        #update request session
+        request.session['player1'] = player1
+        request.session['player2'] = player2
+
+        ab = init_bricks()
         data = json.dumps(ab)
-        cg = ChessGame(ab=data, turn="w", game_over="0")
+        cg = ChessGame(ab=data, player1_pk=player1, player2_pk=player2)
         cg.save()
         request.session['game_id'] = cg.pk
         return HttpResponseRedirect(redirect_to="/game/")
@@ -46,9 +65,7 @@ def game(request):
         ab = json.loads(allb.ab)
         hb = ab['hb']
         sb = ab['sb']
-        print "here", allb.pawn_over
         if allb.pawn_over and (replace in ["D", "H", "T", "L"]):
-            print "here"
             if allb.turn == "w":
                 hb = replace_pawn(hb, replace)
                 allb.turn = "b"
@@ -60,9 +77,6 @@ def game(request):
         allb.ab = json.dumps(ab)
         allb.save()
 
-
-
-
     if 'move' in request.GET:
         this_move = request.GET['move']
         allb = ChessGame.objects.last()
@@ -70,7 +84,7 @@ def game(request):
         ab = json.loads(allb.ab)
         hb = ab['hb']
         sb = ab['sb']
-        gameover = int(allb.game_over)
+        gameover = allb.game_over
 
         start = this_move[:2]
         end = this_move[2:]
@@ -80,7 +94,7 @@ def game(request):
 
         if allb.turn == "w":
             #if game is not finished
-            if gameover == 0:
+            if gameover == "0":
                 #figgure out if castling is allowed
                 #check if user is trying to move king for first time
                 if hb[start] == "Konge" and allb.white_king_moved == False:
@@ -117,14 +131,14 @@ def game(request):
 
                 if checkmate(_sb, _hb, _hb, _sb):
                     if check(_sb, _hb, _hb, _sb):
-                        gameover = 1
+                        gameover = "1"
                         allb.turn = "w"
                     else:
-                        gameover = 2
+                        gameover = "2"
                         allb.turn = "w"
 
         elif allb.turn == "b":
-            if gameover == 0:
+            if gameover == "0":
                 #figgure out if castling is allowed
                 #check if user is trying to move king for first time
                 if sb[start] == "Konge" and allb.black_king_moved == False:
@@ -156,10 +170,10 @@ def game(request):
 
                 if checkmate(_hb, _sb, _hb, _sb):
                     if check(_hb, _sb, _hb, _sb):
-                        gameover = 1
+                        gameover = "1"
                         allb.turn = "b"
                     else:
-                        gameover = 2
+                        gameover = "2"
                         allb.turn = "b"
         
         if (allb.turn == 'w'):
@@ -168,7 +182,7 @@ def game(request):
             turn = 'svart'
 
         allb.ab = json.dumps(ab)
-        allb.game_over = str(gameover)
+        allb.game_over = gameover
         allb.save()
 
         ab['game_over'] = gameover
@@ -177,9 +191,6 @@ def game(request):
         data = json.dumps(ab)
 
         return HttpResponse(data)
-
-    if 'status' in request.GET:
-        pass
 
     all_b = ChessGame.objects.get(pk=request.session['game_id'])
     template = 'game.html'

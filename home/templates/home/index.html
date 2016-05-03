@@ -1,10 +1,101 @@
 {% extends 'home/base.html' %}
 
 {% block full %}
-<div id="StartGameForm">
-	<form action="/" method="POST">
-		{% csrf_token %}
-		<input name="start_game" class="button" type="submit" value="Start Game">
-	</form>
-</div>
+	<div class="col s4">
+		{% if request.session.player1 %}
+			<div class="card brown darken-2">
+				<div class="card-content">
+					<span> 
+						<i class="material-icons">person</i>
+						{{ request.session.player1.username }}
+					</span>
+
+					<span class="right">
+						<form action="/" method="POST">
+							{% csrf_token %}
+							<input name="logout_user_1" hidden="true">
+							<button class="btn" id="logout-button" type="submit">
+								<i class="material-icons">clear</i>
+							</button>
+						</form>
+					</span>
+				</div>
+			</div>
+		{% else %}
+			<div class="card">
+				<div class="card-content">
+					<span class="card-title"> Logg inn eller opprett bruker </span>
+					<div id="LoginPlayer1Form">
+						<form action="/" method="POST">
+							{% csrf_token %}
+							<input name="login_user_1" hidden="true">
+							<label for="username"> username </label>
+							<input id="username" name="username" type="text">
+							<label for="password"> password </label>
+							<input id="password" name="password" type="password">
+							<button class="btn" id="login-button" type="submit"> Send </button>
+						</form>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+
+	<div class="col s4">
+		{% if request.session.player1 %}
+			{% if request.session.player2 %}
+				<div class="card brown darken-2">
+					<div class="card-content">
+						<span class="center">
+							<form action="/" method="POST">
+								{% csrf_token %}
+								<input name="start_game" class="btn" type="submit" value="Start Spill">
+							</form>
+						</span>
+					</div>
+				</div>
+			{% endif %}
+		{% else %}
+		<span></span>
+		{% endif %}
+	</div>
+
+	<div class="col s4">
+		{% if request.session.player2 %}
+				<div class="card brown darken-2">
+					<div class="card-content">
+						<span> 
+							<i class="material-icons">person</i>
+							{{ request.session.player2.username }}
+						</span>
+						<span class="right">
+							<form action="/" method="POST">
+								{% csrf_token %}
+								<input name="logout_user_2" hidden="true">
+								<button class="btn" id="logout-button" type="submit">
+									<i class="material-icons">clear</i>
+								</button>
+							</form>
+						</span>
+					</div>
+				</div>
+		{% else %}
+			<div class="card">
+				<div class="card-content">
+					<span class="card-title"> Logg inn eller opprett bruker </span>
+					<div id="LoginPlayer1Form">
+						<form action="/" method="POST">
+							{% csrf_token %}
+							<input name="login_user_2" hidden="true">
+							<label for="username"> username </label>
+							<input id="username" name="username" type="text">
+							<label for="password"> password </label>
+							<input id="password" name="password" type="password">
+							<button class="btn" id="login-button" type="submit"> Send </button>
+						</form>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	</div>
 {% endblock %}
