@@ -21,7 +21,6 @@ def login_or_create_user(username, password):
     #check if user is in database
     try:
         user = ChessUser.objects.get(username=username)
-        print user
         #check if correct password
         if not user.password == password:
             user = None
@@ -33,6 +32,9 @@ def login_or_create_user(username, password):
 
 def index(request):
     if request.method == "POST":
+        for post in request.POST:
+            print post, request.POST[post]
+
         #logout player 1
         if 'logout_user_1' in request.POST:
             del request.session['player1']
@@ -63,9 +65,10 @@ def index(request):
             if user: request.session['player2'] = {'username':user.username, 'pk':user.pk}
 
         #challenge anoter user
-        elif 'opponents' in request.POST:
+        elif 'opponent' in request.POST:
+            print "creating challenge"
             p1 = ChessUser.objects.get(pk=request.session['player1']['pk'])
-            p2 = ChessUser.objects.get(pk=request.POST['opponents'])
+            p2 = ChessUser.objects.get(pk=request.POST['opponent'])
             Challenge(player1=p1, player2=p2).save()
 
         #accept or deny challenge

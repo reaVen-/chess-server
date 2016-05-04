@@ -20,7 +20,6 @@
 <div class="col s6">
 	<div id="board"> 
 		<div id="status"> </div>
-		{{board|safe}}
 		<div class="replace" id="replace_pawn_white">
 			<a class="rpiece" href="/game/?replace=D"><img src="/static/imgs/Dronningw.png"></a>
 			<a class="rpiece" href="/game/?replace=T"><img src="/static/imgs/Trnw.png"></a>
@@ -33,6 +32,7 @@
 			<a class="rpiece" href="/game/?replace=H"><img src="/static/imgs/Hestb.png"></a>
 			<a class="rpiece" href="/game/?replace=L"><img src="/static/imgs/Lperb.png"></a>
 		</div>
+		{{board|safe}}
 	</div>
 	
 
@@ -42,12 +42,26 @@
 		var black = ab.sb;
 		var game_over = 0;
 		var turn = "{{turn|safe}}"
+		{% if request.session.player2 %}
+			var should_poll = false;
+		{% else %}
+			var should_poll = true;
+			{% if request.session.player1 == player_white %}
+				var poll_color = "hvit";
+			{% else %}
+				var poll_color = "black";
+			{% endif %}
+		{% endif %}
 		if (turn == "w") {
 			turn = "hvit";
 		} else {
 			turn = "svart";
-			poll(white, black);
 		}
+		if (should_poll = true) {
+			poll(turn, poll_color);
+		}
+		console.log(should_poll);
+
 		check_status(game_over, turn);
 
 
@@ -87,11 +101,13 @@
 			replace_piece(ab.turn, ab.pawn_over);
 		}
 
-		function poll(hb, sb) {
+		function poll(turn, poll_color) {
 			setTimeout(function() {
-				$.ajax({url:"poll/", success: function(data) {
+				if (turn == poll_color) {
+					$.ajax({url:"poll/", success: function(data) {
 					changeBoard(JSON.parse(data));
-				}, datatype: "json", complete: poll});
+					}, datatype: "json", complete: poll});
+				}
 			}, 3000);
 		};
 

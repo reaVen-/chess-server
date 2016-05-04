@@ -211,7 +211,9 @@ def game(request):
     template = 'game.html'
     context = {'bricks':all_b.ab,
                 'board':generate_board(),
-                'turn':str(all_b.turn),
+                'turn':all_b.turn,
+                'player_white':all_b.player_white_pk,
+                'player_black':all_b.player_black_pk,
                 }
 
     return render_to_response(template, context, context_instance=RequestContext(request))
