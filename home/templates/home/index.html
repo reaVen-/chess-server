@@ -21,10 +21,48 @@
 					</span>
 				</div>
 			</div>
+
+			{% if challenges_player1 %}
+				<div class="card brown darken-2">
+					<div class="card-content">
+						{% for challenge in challenges_player1 %}
+							<span>
+								<i class="material-icons">person</i>
+								{{challenge.player1.username}} har utfordret deg
+							</span>
+
+							<span class="right">
+								<form action="/" method="POST">
+									{% csrf_token %}
+									<input name="answer_challenge" hidden="true">
+									<button name= "deny" class="btn red" id="deny" type="submit" value="{{challenge.pk}}">
+										<i class="material-icons">clear</i>
+									</button>
+									<button name="accept" class="btn" id="accept" type="submit" value="{{challenge.pk}}">
+										<i class="material-icons">add</i>
+									</button>
+								</form>
+							</span>
+							
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+
+			{% if matches_player1 %}
+				<div class="card brown darken-2">
+					<div class="card-content">
+						<span class="card-title"> Active matches </span><br>
+						{% for match in matches_player1 %}
+							<span> {{match.pk}} {{match.player_white_pk}} {{match.player_black_pk}} </span>
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
 		{% else %}
 			<div class="card">
 				<div class="card-content">
-					<span class="card-title"> Logg inn eller opprett bruker </span>
+					<span class="card-title center"> Logg inn eller opprett bruker </span>
 					<div id="LoginPlayer1Form">
 						<form action="/" method="POST">
 							{% csrf_token %}
@@ -99,7 +137,7 @@
 			{% endif %}
 			<div class="card">
 				<div class="card-content">
-					<span class="card-title"> Logg inn eller opprett bruker </span>
+					<span class="card-title center"> Logg inn eller opprett bruker </span>
 					<div id="LoginPlayer1Form">
 						<form action="/" method="POST">
 							{% csrf_token %}

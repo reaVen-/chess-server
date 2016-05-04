@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from chess_logic import views as chess_logic_views
-from home import views as home_views
+#from chess_logic import views as chess_logic_views
+#from home import views as home_views
 
 
 urlpatterns = [
-    url(r'^$', home_views.index, name="index"),
-    url(r'^game/poll/', chess_logic_views.poll, name="poll"),
-    url(r'^game/', chess_logic_views.game, name="game"),
+    url(r'^$', "home.views.index", name="index"),
+    url(r'^game/poll/', "chess_logic.views.poll", name="poll"),
+    url(r'^game/', "chess_logic.views.game", name="game"),
 ]

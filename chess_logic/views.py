@@ -4,6 +4,8 @@ from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from random import randint as random_int
 
+from home.models import Challenge
+
 from chess_logic.models import ChessGame
 import json
 from chess_rules import init_bricks, move, checkmate, check, pawn_over, replace_pawn
@@ -33,6 +35,23 @@ def poll(request):
 
 
 def game(request):
+    if 'challenge' in request.GET:
+        ch = Challenge.objects.get(pk=request.GET['challenge'])
+        p1 = request.session['player1']['pk']
+        p2 = ch.player1.pk
+
+        if random_int(1, 10) > 5:
+            p1, p2 = p2, p1
+
+        ab = init_bricks()
+        data = json.dumps(ab)
+        cg = ChessGame(ab=data, player_white_pk=p1, player_black_pk=p2)
+        cg.save()
+        request.session['game_id'] = cg.pk
+        ch.delete()
+        return HttpResponseRedirect(redirect_to="/game/")
+
+
     if 'new_game' in request.GET:
         #start a new game
         player1 = request.session.get("player1", "ANONYMOUS")
