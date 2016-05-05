@@ -74,7 +74,9 @@ def game(request):
     if 'contine_game' in request.GET:
         #continue a game
         game = ChessGame.objects.get(pk=int(request.GET['continue_game']))
+        print game.pk
         request.session['game_id'] = game.pk
+        print request.session['game_id']
 
 
     if 'replace' in request.GET:
