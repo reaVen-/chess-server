@@ -73,7 +73,7 @@ def game(request):
 
     if 'contine_game' in request.GET:
         #continue a game
-        game = ChessGame.objects.get(pk=request.GET['continue_game'])
+        game = ChessGame.objects.get(pk=int(request.GET['continue_game']))
         request.session['game_id'] = game.pk
 
 
