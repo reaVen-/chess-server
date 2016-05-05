@@ -74,9 +74,7 @@ def game(request):
     if 'continue_game' in request.GET:
         #continue a game
         game = ChessGame.objects.get(pk=int(request.GET['continue_game']))
-        print game.pk
         request.session['game_id'] = game.pk
-        print request.session['game_id']
 
 
     if 'replace' in request.GET:
@@ -119,7 +117,7 @@ def game(request):
         #check if this user can move
         if not 'player2' in request.session:
             #figgure out if player1 is white or black
-            if request.session['player1']['pk'] == allb.player_white_pk:
+            if str(request.session['player1']['pk']) == str(allb.player_white_pk):
                 allow_move_black = False
             else:
                 allow_move_white = False
@@ -238,7 +236,7 @@ def game(request):
         context['player2pk'] = request.session['player2']['pk']
         context['player2name'] = request.session['player2']['username']
 
-    if request.session['player1']['pk'] == all_b.player_white_pk:
+    if str(request.session['player1']['pk']) == str(all_b.player_white_pk):
         context['player2pk'] = all_b.player_black_pk
         context['player2name'] = ChessUser.objects.get(pk=context['player2pk']).username
     else:

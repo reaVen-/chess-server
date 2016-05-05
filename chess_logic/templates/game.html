@@ -4,7 +4,7 @@
 {% block full %}
 <div class="col s3">
 	{% if request.session.player1 %}
-		{% if player1pk == player_white %}
+		{% if player1pk|stringformat:"s" == player_white|stringformat:"s" %}
 			<div class="white-player">
 				<div class="card white">
 					<div class="card-content">
@@ -195,7 +195,7 @@
 
 <div class="col s3">
 	{% if request.session.player2 %}
-		{% if player2pk == player_black %}
+		{% if player2pk|stringformat:"s" == player_black|stringformat:"s" %}
 			<div class="black-player">
 				<div class="card">
 					<div class="card-content black">
@@ -215,7 +215,7 @@
 			</div>
 		{% endif %}
 	{% else %}
-		{% if player2pk == player_black %}
+		{% if player2pk|stringformat:"s" == player_black|stringformat:"s" %}
 			<div class="black-player">
 				<div class="card">
 					<div class="card-content black">
