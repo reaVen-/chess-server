@@ -53,8 +53,31 @@
 				<div class="card brown darken-2">
 					<div class="card-content">
 						<span class="card-title"> Active matches </span><br>
-						{% for match in matches_player1 %}
-							<span> {{match.pk}} {{match.player_white_pk}} {{match.player_black_pk}} </span>
+						{% for wp, bp, p1turn, game_id in matches_player1 %}
+							<ul>
+								<div>
+									<span style="color:white;font-size:22px;"> {{wp}} </span>
+									<span> vs </span>
+									<span style="color:black;font-size:22px;"> {{bp}} </span>
+									<span class="right">
+										<form action="/" method="POST">
+											{% csrf_token %}
+											<input name="continue_game" hidden="true" value="{{game_id}}">
+											{% if p1turn %}
+												<button class="btn green" type="submit">
+												<span> Din tur </span></button>
+											{% else %}
+												<button class="btn red" type="submit">
+												<span>Venter</span></button>
+											{% endif %}
+											
+										</form>
+									</span>
+								<div class="divider"></div>
+								</div>
+							<br>
+
+							</ul>
 						{% endfor %}
 					</div>
 				</div>

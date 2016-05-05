@@ -85,7 +85,7 @@ def index(request):
 
         #continue a game
         elif "continue_game" in request.POST:
-            return redirect("/game/?continue_game=%d"%request.POST["continue_game"])
+            return redirect("/game/?continue_game=%s"%request.POST["continue_game"])
 
     #gather all challenges for player1
     challenges_player1 = []
@@ -97,10 +97,27 @@ def index(request):
     matches_player1 = []
     if request.session.get('player1', ''):
         p1 = request.session['player1']['pk']
-        matches_player1 = ChessGame.objects.filter(player_white_pk=p1) | ChessGame.objects.filter(player_black_pk=p1)
+        games = ChessGame.objects.filter(player_white_pk=p1) | ChessGame.objects.filter(player_black_pk=p1)
+        for game in games:
+            if game.game_over == "0":
+                wp = ChessUser.objects.get(pk=game.player_white_pk).username
+                bp = ChessUser.objects.get(pk=game.player_black_pk).username
+                print type(p1), type(game.player_white_pk), type(game.turn)
+                if str(game.player_white_pk) == str(p1) and game.turn == "hvit":
+                    p1turn = True
+                elif str(game.player_black_pk) == str(p1) and game.turn == "svart":
+                    p1turn = True
+                else:
+                    p1turn = False
+
+                matches_player1.append((wp, bp, p1turn, game.pk))
+
+
 
     template = 'home/index.html'
     context = {'opponent_picker_form':OpponentPicker,
                 'challenges_player1':challenges_player1,
                 'matches_player1':matches_player1,}
     return render_to_response(template, context, context_instance=RequestContext(request))
+
+# navn_hvit, navn_svart, din_tur, gameid

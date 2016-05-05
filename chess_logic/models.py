@@ -11,7 +11,7 @@ class ChessGame(models.Model):
 	player_black_pk = models.CharField(max_length=10)
 
 	#game state
-	turn = models.CharField(max_length=1, default="w")
+	turn = models.CharField(max_length=5, default="hvit")
 	game_over = models.CharField(max_length=1, default="0")
 
 	#fields to assert game state

@@ -4,17 +4,29 @@
 {% block full %}
 <div class="col s3">
 	{% if request.session.player1 %}
-		<div class="white-player">
-			<div class="card white">
-				<div class="card-content">
-					<i class="material-icons">person</i>
-					<span>{{request.session.player1.username}}</span>
+		{% if player1pk == player_white %}
+			<div class="white-player">
+				<div class="card white">
+					<div class="card-content">
+						<i class="material-icons">person</i>
+						<span>{{request.session.player1.username}}</span>
+					</div>
 				</div>
 			</div>
-		</div>
+		{% else %}
+			<div class="black-player">
+				<div class="card black">
+					<div class="card-content">
+						<i class="material-icons">person</i>
+						<span>{{request.session.player1.username}}</span>
+					</div>
+				</div>
+			</div>
+		{% endif %}
 	{% else %}
 		<p></p>
 	{% endif %}
+
 </div>
 
 <div class="col s6">
@@ -40,29 +52,39 @@
 		var ab = {{bricks|safe}};
 		var white = ab.hb;
 		var black = ab.sb;
-		var game_over = 0;
-		var turn = "{{turn|safe}}"
+		var game_over = {{game_over|safe}};
+
+		var turn = "{{turn|safe}}";
+		var player1 = {{player1|safe}};
+		var player_white = "{{player_white|safe}}";
+		var player_black = "{{player_black|safe}}";
+		
+
+		var should_poll = false;
+
 		{% if request.session.player2 %}
-			var should_poll = false;
+			var player2 = {{player2|safe}}
 		{% else %}
 			var should_poll = true;
-			{% if request.session.player1 == player_white %}
-				var poll_color = "hvit";
-			{% else %}
-				var poll_color = "black";
-			{% endif %}
 		{% endif %}
-		if (turn == "w") {
-			turn = "hvit";
-		} else {
-			turn = "svart";
-		}
-		if (should_poll = true) {
-			poll(turn, poll_color);
-		}
-		console.log(should_poll);
 
+		if (should_poll) {
+			poll(turn)
+		}
+
+		console.log("game_over:" + game_over);
+		console.log("turn: " + turn);
+		console.log("p1: " + player1.pk);
+		console.log("player_white: " + player_white);
+		console.log("player_black: " + player_black);
+
+		console.log(player1.pk == player_black);
 		check_status(game_over, turn);
+
+		var from_square = null;
+		positionPieces(white, "w");
+		positionPieces(black, "b");
+		initHandlers();
 
 
 		function check_status(game_over, turn) {
@@ -77,7 +99,7 @@
 		};
 
 		function replace_piece(turn, pawn_over) {
-			if (turn == "w") {
+			if (turn == "hvit") {
 				if (ab.pawn_over == true) {
 					$("#replace_pawn_white").css("display", "inline-block");
 				} else {
@@ -101,13 +123,15 @@
 			replace_piece(ab.turn, ab.pawn_over);
 		}
 
-		function poll(turn, poll_color) {
+		function poll(turn) {
 			setTimeout(function() {
-				if (turn == poll_color) {
 					$.ajax({url:"poll/", success: function(data) {
-					changeBoard(JSON.parse(data));
+					js_data = JSON.parse(data);
+					if (js_data.turn != turn) {
+						changeBoard(js_data);
+					}
+					
 					}, datatype: "json", complete: poll});
-				}
 			}, 3000);
 		};
 
@@ -117,6 +141,9 @@
 				if (xhttp.readyState == 4 & xhttp.status == 200) {
 					ab = JSON.parse(xhttp.responseText);
 					changeBoard(ab)
+					console.log(turn)
+					console.log(poll_color)
+
 				}
 			};
 
@@ -137,11 +164,6 @@
 				rute.innerHTML = "<div class='piece'><img src=/static/imgs/"+pieces[piece]+color+".png></div>";
 			}
 		}
-
-		var from_square = null;
-		positionPieces(white, "w");
-		positionPieces(black, "b");
-		initHandlers();
 
 		function initHandlers() {
 			$(".grid").click(function(ev) {
@@ -173,14 +195,45 @@
 
 <div class="col s3">
 	{% if request.session.player2 %}
-		<div class="black-player">
-			<div class="card">
-				<div class="card-content black">
-					<i class="material-icons">person</i>
-					<span> {{request.session.player2.username}} </span>
+		{% if player2pk == player_black %}
+			<div class="black-player">
+				<div class="card">
+					<div class="card-content black">
+						<i class="material-icons">person</i>
+						<span> {{request.session.player2.username}} </span>
+					</div>
 				</div>
 			</div>
-		</div>
+		{% else %}
+			<div class="white-player">
+				<div class="card">
+					<div class="card-content white">
+						<i class="material-icons">person</i>
+						<span> {{request.session.player2.username}} </span>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	{% else %}
+		{% if player2pk == player_black %}
+			<div class="black-player">
+				<div class="card">
+					<div class="card-content black">
+						<i class="material-icons">person</i>
+						<span> {{player2name}} </span>
+					</div>
+				</div>
+			</div>
+		{% else %}
+			<div class="white-player">
+				<div class="card">
+					<div class="card-content white">
+						<i class="material-icons">person</i>
+						<span> {{player2name}} </span>
+					</div>
+				</div>
+			</div>
+		{% endif %}
 	{% endif %}
 </div>
 {% endblock %}
