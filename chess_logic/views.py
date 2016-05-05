@@ -71,7 +71,7 @@ def game(request):
         request.session['game_id'] = cg.pk
         return HttpResponseRedirect(redirect_to="/game/")
 
-    if 'contine_game' in request.GET:
+    if 'continue_game' in request.GET:
         #continue a game
         game = ChessGame.objects.get(pk=int(request.GET['continue_game']))
         print game.pk
