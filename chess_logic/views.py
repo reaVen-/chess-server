@@ -235,13 +235,13 @@ def game(request):
         context['player2'] = json.dumps(request.session['player2'])
         context['player2pk'] = request.session['player2']['pk']
         context['player2name'] = request.session['player2']['username']
-
-    if str(request.session['player1']['pk']) == str(all_b.player_white_pk):
-        context['player2pk'] = all_b.player_black_pk
-        context['player2name'] = ChessUser.objects.get(pk=context['player2pk']).username
     else:
-        context['player2pk'] = all_b.player_white_pk
-        context['player2name'] = ChessUser.objects.get(pk=context['player2pk']).username
+        if str(request.session['player1']['pk']) == str(all_b.player_white_pk):
+            context['player2pk'] = all_b.player_black_pk
+            context['player2name'] = ChessUser.objects.get(pk=context['player2pk']).username
+        else:
+            context['player2pk'] = all_b.player_white_pk
+            context['player2name'] = ChessUser.objects.get(pk=context['player2pk']).username
     
 
     return render_to_response(template, context, context_instance=RequestContext(request))
