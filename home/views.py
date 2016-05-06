@@ -16,17 +16,42 @@ class OpponentPicker(forms.Form):
             choices.append((user.pk, user.username))
         self.fields['opponent'] = forms.ChoiceField(choices=choices)
 
+def get_active_matches(request):
+    """creates a list of active matches for player 1"""
+    matches_player1 = []
+    if request.session.get('player1', ''):
+        p1 = request.session['player1']['pk']
+        games = ChessGame.objects.filter(player_white_pk=p1) | ChessGame.objects.filter(player_black_pk=p1)
+        for game in games:
+            if game.game_over == "0":
+                wp = ChessUser.objects.get(pk=game.player_white_pk).username
+                bp = ChessUser.objects.get(pk=game.player_black_pk).username
+                print type(p1), type(game.player_white_pk), type(game.turn)
+                if str(game.player_white_pk) == str(p1) and game.turn == "hvit":
+                    p1turn = True
+                elif str(game.player_black_pk) == str(p1) and game.turn == "svart":
+                    p1turn = True
+                else:
+                    p1turn = False
+
+                matches_player1.append((wp, bp, p1turn, game.pk))
+    return matches_player1
+
 
 def login_or_create_user(username, password):
     #check if user is in database
     try:
         user = ChessUser.objects.get(username=username)
         #check if correct password
-        if not user.password == password:
+        hex_password = hashlib.sha224(password).hexdigest()
+        if not user.password == hex_password:
             user = None
     except:
-        user = ChessUser(username=username, password=password)
-        user.save()
+        #do not create a user with empty username
+        if len(username) > 1 and len(password) > 1:
+            password = hashlib.sha224(password).hexdigest()
+            user = ChessUser(username=username, password=password)
+            user.save()
 
     return user
 
@@ -50,7 +75,6 @@ def index(request):
         if 'login_user_1' in request.POST:
             username = request.POST['username']
             password = request.POST['password']
-            password = hashlib.sha224(password).hexdigest()
             user = login_or_create_user(username, password)
 
             if user: request.session['player1'] = {'username':user.username, 'pk':user.pk}
@@ -59,7 +83,6 @@ def index(request):
         elif 'login_user_2' in request.POST:
             username = request.POST['username']
             password = request.POST['password']
-            password = hashlib.sha224(password).hexdigest()
             user = login_or_create_user(username, password)
 
             if user: request.session['player2'] = {'username':user.username, 'pk':user.pk}
@@ -94,24 +117,7 @@ def index(request):
         challenges_player1 = Challenge.objects.filter(player2=p1['pk'])
 
     #gather all active matches for player1
-    matches_player1 = []
-    if request.session.get('player1', ''):
-        p1 = request.session['player1']['pk']
-        games = ChessGame.objects.filter(player_white_pk=p1) | ChessGame.objects.filter(player_black_pk=p1)
-        for game in games:
-            if game.game_over == "0":
-                wp = ChessUser.objects.get(pk=game.player_white_pk).username
-                bp = ChessUser.objects.get(pk=game.player_black_pk).username
-                print type(p1), type(game.player_white_pk), type(game.turn)
-                if str(game.player_white_pk) == str(p1) and game.turn == "hvit":
-                    p1turn = True
-                elif str(game.player_black_pk) == str(p1) and game.turn == "svart":
-                    p1turn = True
-                else:
-                    p1turn = False
-
-                matches_player1.append((wp, bp, p1turn, game.pk))
-
+    matches_player1 = get_active_matches(request)
 
 
     template = 'home/index.html'
@@ -119,5 +125,3 @@ def index(request):
                 'challenges_player1':challenges_player1,
                 'matches_player1':matches_player1,}
     return render_to_response(template, context, context_instance=RequestContext(request))
-
-# navn_hvit, navn_svart, din_tur, gameid
