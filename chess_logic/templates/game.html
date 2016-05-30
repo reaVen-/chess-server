@@ -110,6 +110,9 @@
 
 		{% if request.session.player2 %}
 			var player2 = {{player2|safe}}
+			if (player2.username == "Magnus Carlsen") {
+				should_poll = true;
+			}
 		{% else %}
 			var should_poll = true;
 		{% endif %}

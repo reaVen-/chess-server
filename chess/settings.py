@@ -125,3 +125,10 @@ STATIC_URL = '/static/'
 STATIC_ROOT = '/home/pi/www/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/home/pi/www/media'
+
+#celery
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout':60}
+BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
