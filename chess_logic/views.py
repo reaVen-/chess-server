@@ -73,8 +73,11 @@ def poll(request):
         'turn':game_data.turn, 'pawn_over':game_data.pawn_over}
         return HttpResponse(json.dumps(data))
 
-def do_move(request):
-    this_move = request.GET['move']
+def do_move(request, move=None):
+    if move:
+        this_move = move
+    else:
+        this_move = request.GET['move']
     cg = ChessGame.objects.get(pk=request.session['game_id'])
 
     ab = json.loads(cg.ab)
@@ -335,10 +338,10 @@ def ai(request):
         cg.ab = json.loads(cg.ab)
         fen = generate_fen(cg.__dict__)
         best_move = get_best_move(fen).upper()
-        do_move(request)
+        do_move(request, move=best_move)
 
     if request.method == "GET" and 'move' in request.GET:
-        return do_move(request)
+        return do_move(request.GET['move'])
 
     context = {'bricks':cg.ab,
                 'board':generate_board(),
