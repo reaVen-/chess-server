@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 from celery import shared_task
 
-from views import do_move
+from chess_logic.views import do_move
 
 from chess_logic.models import ChessGame
 
