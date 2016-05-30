@@ -2,6 +2,7 @@ from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from home.models import ChessUser, Challenge
 from django import forms
+from django.http import HttpResponseRedirect
 from chess_logic.models import ChessGame
 
 import hashlib
@@ -67,9 +68,12 @@ def index(request):
             if 'player2' in request.session:
                 request.session['player1'] = request.session['player2']
                 del request.session['player2']
+            return HttpResponseRedirect(redirect_to="/")
+
         #logout player 2
         elif 'logout_user_2' in request.POST:
             del request.session['player2']
+            return HttpResponseRedirect(redirect_to="/")
 
         #try to login user 1
         if 'login_user_1' in request.POST:
@@ -78,6 +82,7 @@ def index(request):
             user = login_or_create_user(username, password)
 
             if user: request.session['player1'] = {'username':user.username, 'pk':user.pk}
+            return HttpResponseRedirect(redirect_to="/")
 
         #try to login user 2
         elif 'login_user_2' in request.POST:
@@ -86,13 +91,14 @@ def index(request):
             user = login_or_create_user(username, password)
 
             if user: request.session['player2'] = {'username':user.username, 'pk':user.pk}
+            return HttpResponseRedirect(redirect_to="/")
 
         #challenge anoter user
         elif 'opponent' in request.POST:
-            print "creating challenge"
             p1 = ChessUser.objects.get(pk=request.session['player1']['pk'])
             p2 = ChessUser.objects.get(pk=request.POST['opponent'])
             Challenge(player1=p1, player2=p2).save()
+            return HttpResponseRedirect(redirect_to="/")
 
         #accept or deny challenge
         elif 'answer_challenge' in request.POST:
@@ -100,6 +106,7 @@ def index(request):
                 return redirect('/game/?challenge=%s'%request.POST['accept'])
             elif 'deny' in request.POST:
                 Challenge.objects.get(pk=request.POST['deny']).delete()
+            return HttpResponseRedirect(redirect_to="/")
 
 
         #start a new game
