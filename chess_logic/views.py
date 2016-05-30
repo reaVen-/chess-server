@@ -339,6 +339,7 @@ def ai(request):
         fen = generate_fen(cg.__dict__)
         best_move = get_best_move(fen).upper()
         do_move(request, ai_move=best_move)
+        cg.refresh_from_db()
 
     if request.method == "GET" and 'move' in request.GET:
         return do_move(request)
