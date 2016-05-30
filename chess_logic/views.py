@@ -50,7 +50,8 @@ def generate_board():
 def poll_best_move(request):
     if 'game_id' in request.session:
         game_data = ChessGame.objects.get(pk=request.session['game_id'])
-        fen = generate_fen(game_data)
+        game_data.ab = json.loads(game_data.ab)
+        fen = generate_fen(game_data.__dict__)
         return HttpResponse(json.dumps(get_best_move(fen)))
 
 
