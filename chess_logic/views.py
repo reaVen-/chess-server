@@ -64,6 +64,7 @@ def poll_best_move(request):
         return HttpResponse(json.dumps(best_move))
 
 
+
 def poll(request):
     if 'game_id' in request.session:
         game_data = ChessGame.objects.get(pk=request.session['game_id'])
@@ -71,6 +72,128 @@ def poll(request):
         data = {'hb':ab['hb'], 'sb':ab['sb'], 'game_over':game_data.game_over,
         'turn':game_data.turn, 'pawn_over':game_data.pawn_over}
         return HttpResponse(json.dumps(data))
+
+def do_move(request):
+    this_move = request.GET['move']
+    cg = ChessGame.objects.get(pk=request.session['game_id'])
+
+    ab = json.loads(cg.ab)
+    hb = ab['hb']
+    sb = ab['sb']
+    gameover = cg.game_over
+
+    start = this_move[:2]
+    end = this_move[2:]
+
+    castling_left = False
+    castling_right = False
+
+    allow_move_black = True
+    allow_move_white = True
+
+    #check if this user can move
+    if not 'player2' in request.session:
+        #figgure out if player1 is white or black
+        if str(request.session['player1']['pk']) == str(cg.player_white_pk):
+            allow_move_black = False
+        else:
+            allow_move_white = False
+
+
+    if cg.turn == "hvit" and allow_move_white:
+        #if game is not finished
+        if gameover == "0":
+            #figgure out if castling is allowed
+            #check if user is trying to move king for first time
+            if hb[start] == "Konge" and cg.white_king_moved == False:
+                #check if user tries castling right
+                if end == "G1" and cg.white_tower_right_moved == False:
+                    #set castling to true
+                    castling_right = True
+                #check if user tries castling left
+                elif end == "C1" and cg.white_tower_left_moved == False:
+                    #set castling to true
+                    castling_left = True
+
+            #try to move
+            _hb, _sb = move(hb, sb, start, end, hb, sb, castling_left=castling_left, castling_right=castling_right)
+            #check if move was succesful
+            if hb != _hb:
+                #update bricks in database
+                ab = {'hb':_hb, 'sb':_sb}
+                #check if white moved his king or tower
+                if start == "E1" and hb[start] == "Konge":
+                    cg.white_king_moved = True
+
+                #check if white moved his tower from initial position
+                if start == "A1" and hb[start] == "Trn":
+                    cg.white_tower_left_moved = True
+                elif start == "H1" and hb[start] == "Trn":
+                    cg.white_tower_right_moved = True
+
+                #change turn
+                cg.turn = "svart"
+                if pawn_over(_hb):
+                    cg.pawn_over = True
+                    cg.turn = "hvit"
+
+            if checkmate(_sb, _hb, _hb, _sb):
+                if check(_sb, _hb, _hb, _sb):
+                    gameover = "1"
+                    cg.turn = "hvit"
+                else:
+                    gameover = "2"
+                    cg.turn = "hvit"
+
+    elif cg.turn == "svart" and allow_move_black:
+        if gameover == "0":
+            #figgure out if castling is allowed
+            #check if user is trying to move king for first time
+            if sb[start] == "Konge" and cg.black_king_moved == False:
+                #check if user tries castling right
+                if end == "G8" and cg.black_tower_right_moved == False:
+                    #set castling to true
+                    castling_right = True
+                elif end == "C8" and cg.black_tower_left_moved == False:
+                    #set castling to true
+                    castling_left = True
+
+            _sb, _hb = move(sb, hb, start, end, hb, sb, castling_left=castling_left, castling_right=castling_right)
+            if sb != _sb:
+                ab = {'hb':_hb, 'sb':_sb}
+                #check if black moved his king from initial position
+                if start == "E8" and sb[start] == "Konge":
+                    cg.black_king_moved = True
+
+                #check if black moved his tower from initial position
+                if start == "A8" and sb[start] == "Trn":
+                    cg.black_tower_left_moved = True
+                elif start == "H8" and sb[start] == "Trn":
+                    cg.black_tower_right_moved = True
+
+                cg.turn = "hvit"
+                if pawn_over(_sb):
+                    cg.pawn_over = True
+                    cg.turn = "svart"
+
+            if checkmate(_hb, _sb, _hb, _sb):
+                if check(_hb, _sb, _hb, _sb):
+                    gameover = "1"
+                    cg.turn = "svart"
+                else:
+                    gameover = "2"
+                    cg.turn = "svart"
+    
+    cg.ab = json.dumps(ab)
+    cg.game_over = gameover
+    cg.save()
+
+    ab['game_over'] = gameover
+    ab['turn'] = cg.turn;
+    ab['pawn_over'] = cg.pawn_over
+    data = json.dumps(ab)
+
+    return HttpResponse(data)
 
 
 def game(request):
@@ -119,144 +242,25 @@ def game(request):
 
     if 'replace' in request.GET:
         replace = request.GET['replace']
-        allb = ChessGame.objects.get(pk=request.session['game_id'])
-        ab = json.loads(allb.ab)
+        cg = ChessGame.objects.get(pk=request.session['game_id'])
+        ab = json.loads(cg.ab)
         hb = ab['hb']
         sb = ab['sb']
-        if allb.pawn_over and (replace in ["D", "H", "T", "L"]):
-            if allb.turn == "hvit":
+        if cg.pawn_over and (replace in ["D", "H", "T", "L"]):
+            if cg.turn == "hvit":
                 hb = replace_pawn(hb, replace)
-                allb.turn = "svart"
+                cg.turn = "svart"
             else:
                 sb = replace_pawn(sb, replace)
-                allb.turn = "hvit"
-            allb.pawn_over = False
+                cg.turn = "hvit"
+            cg.pawn_over = False
         ab = {'hb':hb, 'sb':sb}
-        allb.ab = json.dumps(ab)
-        allb.save()
+        cg.ab = json.dumps(ab)
+        cg.save()
         return HttpResponseRedirect(redirect_to="/game/")
 
     if 'move' in request.GET:
-        this_move = request.GET['move']
-        allb = ChessGame.objects.get(pk=request.session['game_id'])
-
-        ab = json.loads(allb.ab)
-        hb = ab['hb']
-        sb = ab['sb']
-        gameover = allb.game_over
-
-        start = this_move[:2]
-        end = this_move[2:]
-
-        castling_left = False
-        castling_right = False
-
-        allow_move_black = True
-        allow_move_white = True
-
-        #check if this user can move
-        if not 'player2' in request.session:
-            #figgure out if player1 is white or black
-            if str(request.session['player1']['pk']) == str(allb.player_white_pk):
-                allow_move_black = False
-            else:
-                allow_move_white = False
-
-
-        if allb.turn == "hvit" and allow_move_white:
-            #if game is not finished
-            if gameover == "0":
-                #figgure out if castling is allowed
-                #check if user is trying to move king for first time
-                if hb[start] == "Konge" and allb.white_king_moved == False:
-                    #check if user tries castling right
-                    if end == "G1" and allb.white_tower_right_moved == False:
-                        #set castling to true
-                        castling_right = True
-                    #check if user tries castling left
-                    elif end == "C1" and allb.white_tower_left_moved == False:
-                        #set castling to true
-                        castling_left = True
-
-                #try to move
-                _hb, _sb = move(hb, sb, start, end, hb, sb, castling_left=castling_left, castling_right=castling_right)
-                #check if move was succesful
-                if hb != _hb:
-                    #update bricks in database
-                    ab = {'hb':_hb, 'sb':_sb}
-                    #check if white moved his king or tower
-                    if start == "E1" and hb[start] == "Konge":
-                        allb.white_king_moved = True
-
-                    #check if white moved his tower from initial position
-                    if start == "A1" and hb[start] == "Trn":
-                        allb.white_tower_left_moved = True
-                    elif start == "H1" and hb[start] == "Trn":
-                        allb.white_tower_right_moved = True
-
-                    #change turn
-                    allb.turn = "svart"
-                    if pawn_over(_hb):
-                        allb.pawn_over = True
-                        allb.turn = "hvit"
-
-                if checkmate(_sb, _hb, _hb, _sb):
-                    if check(_sb, _hb, _hb, _sb):
-                        gameover = "1"
-                        allb.turn = "hvit"
-                    else:
-                        gameover = "2"
-                        allb.turn = "hvit"
-
-        elif allb.turn == "svart" and allow_move_black:
-            if gameover == "0":
-                #figgure out if castling is allowed
-                #check if user is trying to move king for first time
-                if sb[start] == "Konge" and allb.black_king_moved == False:
-                    #check if user tries castling right
-                    if end == "G8" and allb.black_tower_right_moved == False:
-                        #set castling to true
-                        castling_right = True
-                    elif end == "C8" and allb.black_tower_left_moved == False:
-                        #set castling to true
-                        castling_left = True
-
-                _sb, _hb = move(sb, hb, start, end, hb, sb, castling_left=castling_left, castling_right=castling_right)
-                if sb != _sb:
-                    ab = {'hb':_hb, 'sb':_sb}
-                    #check if black moved his king from initial position
-                    if start == "E8" and sb[start] == "Konge":
-                        allb.black_king_moved = True
-
-                    #check if black moved his tower from initial position
-                    if start == "A8" and sb[start] == "Trn":
-                        allb.black_tower_left_moved = True
-                    elif start == "H8" and sb[start] == "Trn":
-                        allb.black_tower_right_moved = True
-
-                    allb.turn = "hvit"
-                    if pawn_over(_sb):
-                        allb.pawn_over = True
-                        allb.turn = "svart"
-
-                if checkmate(_hb, _sb, _hb, _sb):
-                    if check(_hb, _sb, _hb, _sb):
-                        gameover = "1"
-                        allb.turn = "svart"
-                    else:
-                        gameover = "2"
-                        allb.turn = "svart"
-        
-        allb.ab = json.dumps(ab)
-        allb.game_over = gameover
-        allb.save()
-
-        ab['game_over'] = gameover
-        ab['turn'] = allb.turn;
-        ab['pawn_over'] = allb.pawn_over
-        data = json.dumps(ab)
-
-        return HttpResponse(data)
+        return do_move(request)
 
     all_b = ChessGame.objects.get(pk=request.session['game_id'])
     template = 'game.html'
@@ -289,7 +293,6 @@ def game(request):
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def ai(request):
-    print "here"
     if not 'player1' in request.session:
         print "player 1 missing - redirecting to /"
         return HttpResponseRedirect(redirect_to="/")
@@ -331,11 +334,11 @@ def ai(request):
     if ai_move:
         cg.ab = json.loads(cg.ab)
         fen = generate_fen(cg.__dict__)
-        best_move = get_best_move(fen)
-        return HttpResponseRedirect("/ai/?move=%s"%(best_move.upper()))
+        best_move = get_best_move(fen).upper()
+        do_move(request)
 
     if request.method == "GET" and 'move' in request.GET:
-        print request.GET['move']
+        return do_move(request)
 
     context = {'bricks':cg.ab,
                 'board':generate_board(),
