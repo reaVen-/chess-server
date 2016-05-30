@@ -78,6 +78,9 @@
 			<a class="rpiece" href="/game/?replace=L"><img src="/static/imgs/Lperb.png"></a>
 		</div>
 		{{board|safe}}
+		<br>
+		<button class="btn" onclick="poll_best_move()"> Calculate best move </button>
+		<div id="best_move"> </div>
 	</div>
 	
 
@@ -167,6 +170,14 @@
 					}, datatype: "json", complete: poll});
 			}, 3000);
 		};
+
+		function poll_best_move() {
+			$.ajax(url:"poll_best_move/", success: function(data) {
+				js_data = JSON.parse(data);
+				var best_move = document.getElementById("best_move");
+				best_move.innerHTML = js_data
+			})
+		}
 
 		function move(from_p, to) {
 			var xhttp = new XMLHttpRequest(); 

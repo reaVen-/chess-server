@@ -7,9 +7,30 @@ from random import randint as random_int
 from home.models import Challenge, ChessUser
 
 from chess_logic.models import ChessGame
-import json
-from chess_rules import init_bricks, move, checkmate, check, pawn_over, replace_pawn
+import json, subprocess, time
+from chess_rules import init_bricks, move, checkmate, check, pawn_over, replace_pawn, generate_fen
 from home.views import get_active_matches
+
+def put(command, engine):
+    engine.stdin.write(command+'\n')
+
+def get(engine):
+    engine.stdin.write('isready\n')
+    while True:
+        text = engine.stdout.readline().strip()
+        if text == 'readyok':
+            break
+        if text.startswith("bestmove"):
+            return text
+
+def get_best_move(fen):
+    engine = subprocess.Popen('stockfish', universal_newlines=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    get()
+    put("position fen %s"%fen)
+    get()
+    put("go movetime 5000")
+    time.sleep(5)
+    return get()
 
 def generate_board():
     counter = 0
@@ -25,6 +46,13 @@ def generate_board():
         counter += 1
         board_html += "<br>"
     return board_html
+
+def poll_best_move(request):
+    if 'game_id' in request.session:
+        game_data = ChessGame.objects.get(pk=request.session['game_id'])
+        fen = generate_fen(game_data)
+        return HttpResponse(json.dumps(get_best_move(fen)))
+
 
 def poll(request):
     if 'game_id' in request.session:

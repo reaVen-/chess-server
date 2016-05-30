@@ -22,5 +22,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^$', "home.views.index", name="index"),
     url(r'^game/poll/', "chess_logic.views.poll", name="poll"),
+    url(r'^game/poll_best_move/', "chess_logic.views.poll_best_move", name="poll_best_move"),
     url(r'^game/', "chess_logic.views.game", name="game"),
 ]
