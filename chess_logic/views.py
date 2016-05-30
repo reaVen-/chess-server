@@ -36,7 +36,7 @@ def get_best_move(fen):
         best_move = "Could not find a best move.. Sorry :("
 
     put("exit",engine)
-    get()
+    get(engine)
 
     return best_move
 
