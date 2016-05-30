@@ -105,7 +105,7 @@ def game(request):
 
         ab = init_bricks()
         data = json.dumps(ab)
-        cg = ChessGame(ab=data, player_white_pk=player1, player_black_pk=player2)
+        cg = ChessGame(ab=data, player_white_pk=player1['pk'], player_black_pk=player2['pk'])
         cg.save()
         request.session['game_id'] = cg.pk
         return HttpResponseRedirect(redirect_to="/game/")
@@ -114,6 +114,7 @@ def game(request):
         #continue a game
         game = ChessGame.objects.get(pk=int(request.GET['continue_game']))
         request.session['game_id'] = game.pk
+        return HttpResponseRedirect(redirect_to="/game/")
 
 
     if 'replace' in request.GET:
@@ -286,3 +287,69 @@ def game(request):
     
 
     return render_to_response(template, context, context_instance=RequestContext(request))
+
+def ai(request):
+    print "here"
+    if not 'player1' in request.session:
+        print "player 1 missing - redirecting to /"
+        return HttpResponseRedirect(redirect_to="/")
+    if not 'player2' in request.session:
+        request.session['player2'] = ChessUser.objects.get(username="Magnus Carlsen")
+
+    if request.method == "GET" and 'new_game' in request.GET:
+        player1 = request.session.get("player1", "ANONYMOUS")
+        player2 = request.session.get("player2", "ANONYMOUS")
+
+        #player1 is white, swap then randomly before assigning
+        if random_int(1, 10) > 5:
+            player1, player2 = player2, player1
+
+        ab = init_bricks()
+        data = json.dumps(ab)
+        cg = ChessGame(ab=data, player_white_pk=player1['pk'], player_black_pk=player2['pk'])
+        cg.save()
+        request.session['game_id'] = cg.pk
+        return HttpResponseRedirect("/ai/")
+
+    if not 'game_id' in request.session:
+        return HttpResponseRedirect("/ai/?new_game=1")
+
+    #if AI's move
+    cg = ChessGame.objects.get(pk=int(request.session['game_id']))
+
+    print str(cg.player_white_pk), str(request.session['player2']['pk'])
+
+    if str(cg.player_white_pk) == str(request.session['player2']['pk']) and cg.turn == "hvit":
+        ai_move = True
+    elif str(cg.player_black_pk) == str(request.session['player2']['pk']) and cg.turn == "svart":
+        ai_move = True
+    else:
+        ai_move = False
+
+    print ai_move
+
+    if ai_move:
+        cg.ab = json.loads(cg.ab)
+        fen = generate_fen(cg.__dict__)
+        best_move = get_best_move(fen)
+        return HttpResponseRedirect("/ai/?move=%s"%(best_move.upper()))
+
+    if request.method == "GET" and 'move' in request.GET:
+        print request.GET['move']
+
+    context = {'bricks':cg.ab,
+                'board':generate_board(),
+                'turn':cg.turn,
+                'player_white':cg.player_white_pk,
+                'player_black':cg.player_black_pk,
+                'game_over':cg.game_over,
+                'player1':json.dumps(request.session['player1']),
+                'player1pk':request.session['player1']['pk'],
+                'player1name':request.session['player1']['username'],
+                'player2':json.dumps(request.session['player2']),
+                'player2pk':request.session['player2']['pk'],
+                'player2name':request.session['player2']['username'],
+                }
+
+    return render_to_response("game.html", context, context_instance=RequestContext(request))
+

@@ -97,8 +97,13 @@ def index(request):
         elif 'opponent' in request.POST:
             p1 = ChessUser.objects.get(pk=request.session['player1']['pk'])
             p2 = ChessUser.objects.get(pk=request.POST['opponent'])
-            Challenge(player1=p1, player2=p2).save()
-            return HttpResponseRedirect(redirect_to="/")
+            #Challenge Stockfish
+            if p2.username == "Magnus Carlsen":
+                request.session['player2'] = {'username':p2.username, 'pk':p2.pk}
+                return redirect("/ai/?new_game=1")
+            else:
+                Challenge(player1=p1, player2=p2).save()
+                return HttpResponseRedirect(redirect_to="/")
 
         #accept or deny challenge
         elif 'answer_challenge' in request.POST:
