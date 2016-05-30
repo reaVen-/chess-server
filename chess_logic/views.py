@@ -35,7 +35,7 @@ def get_best_move(fen):
     except:
         best_move = "Could not find a best move.. Sorry :("
 
-    put("exit",engine)
+    put("quit",engine)
     get(engine)
 
     return best_move
