@@ -30,6 +30,7 @@ def get_best_move(fen):
     get(engine)
     put("go movetime 5000", engine)
     time.sleep(5)
+
     return get(engine)
 
 def generate_board():
@@ -52,7 +53,9 @@ def poll_best_move(request):
         game_data = ChessGame.objects.get(pk=request.session['game_id'])
         game_data.ab = json.loads(game_data.ab)
         fen = generate_fen(game_data.__dict__)
-        return HttpResponse(json.dumps(get_best_move(fen)))
+        best_move = get_best_move(fen)
+        print best_move
+        return HttpResponse(json.dumps(best_move))
 
 
 def poll(request):
