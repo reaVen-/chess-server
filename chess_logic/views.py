@@ -35,6 +35,9 @@ def get_best_move(fen):
     except:
         best_move = "Could not find a best move.. Sorry :("
 
+    put("exit",engine)
+    get()
+
     return best_move
 
 def generate_board():
