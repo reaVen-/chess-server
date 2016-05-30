@@ -172,11 +172,11 @@
 		};
 
 		function poll_best_move() {
-			$.ajax(url:"poll_best_move/", success: function(data) {
+			$.ajax({url:"poll_best_move/", success: function(data) {
 				js_data = JSON.parse(data);
 				var best_move = document.getElementById("best_move");
 				best_move.innerHTML = js_data
-			});
+			}, datatype: "json"});
 		};
 
 		function move(from_p, to) {
