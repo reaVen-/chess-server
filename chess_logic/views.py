@@ -24,13 +24,13 @@ def get(engine):
             return text
 
 def get_best_move(fen):
-    engine = subprocess.Popen('stockfish', universal_newlines=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    get()
-    put("position fen %s"%fen)
-    get()
-    put("go movetime 5000")
+    engine = subprocess.Popen('/usr/games/stockfish', universal_newlines=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    get(engine)
+    put("position fen %s"%fen, engine)
+    get(engine)
+    put("go movetime 5000", engine)
     time.sleep(5)
-    return get()
+    return get(engine)
 
 def generate_board():
     counter = 0
