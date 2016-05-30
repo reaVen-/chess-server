@@ -30,8 +30,11 @@ def get_best_move(fen):
     get(engine)
     put("go movetime 5000", engine)
     time.sleep(6)
-    best_move = get(engine)
-    print best_move
+    try:
+        best_move = get(engine).split(" ")[1]
+    except:
+        best_move = "Could not find a best move.. Sorry :("
+
     return best_move
 
 def generate_board():
@@ -55,7 +58,6 @@ def poll_best_move(request):
         game_data.ab = json.loads(game_data.ab)
         fen = generate_fen(game_data.__dict__)
         best_move = get_best_move(fen)
-        print best_move
         return HttpResponse(json.dumps(best_move))
 
 

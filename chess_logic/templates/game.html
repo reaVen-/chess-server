@@ -63,8 +63,14 @@
 </div>
 
 <div class="col s6">
-	<div id="board"> 
-		<div id="status"> </div>
+	<div id="board">
+		<br>
+		<div class="card brown darken-2" style="width:400px;margin:auto;">
+			<div class="card-content">
+				<div id="status"> </div>
+			</div>
+		</div>
+		<br>
 		<div class="replace" id="replace_pawn_white">
 			<a class="rpiece" href="/game/?replace=D"><img src="/static/imgs/Dronningw.png"></a>
 			<a class="rpiece" href="/game/?replace=T"><img src="/static/imgs/Trnw.png"></a>
@@ -79,8 +85,12 @@
 		</div>
 		{{board|safe}}
 		<br>
-		<button class="btn" onclick="poll_best_move()"> Calculate best move </button>
-		<div id="best_move"> </div>
+		<div class="card brown darken-2" style="width:400px;margin:auto;">
+			<div class="card-content">
+				<button class="btn" onclick="poll_best_move()"> Calculate best move </button>
+				<div id="best_move"> </div>
+			</div>
+		</div>
 	</div>
 	
 
