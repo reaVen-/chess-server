@@ -341,7 +341,7 @@ def ai(request):
         do_move(request, ai_move=best_move)
 
     if request.method == "GET" and 'move' in request.GET:
-        return do_move(request.GET['move'])
+        return do_move(request)
 
     context = {'bricks':cg.ab,
                 'board':generate_board(),
