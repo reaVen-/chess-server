@@ -10,6 +10,7 @@ from chess_logic.models import ChessGame
 import json, subprocess, time
 from chess_rules import init_bricks, move, checkmate, check, pawn_over, replace_pawn, generate_fen
 from home.views import get_active_matches
+from chess_logic.tasks import make_ai_move
 
 def put(command, engine):
     engine.stdin.write(command+'\n')
@@ -335,6 +336,7 @@ def ai(request):
     print ai_move
 
     if ai_move:
+        make_ai_move.delay(int(cg.pk))
         cg.ab = json.loads(cg.ab)
         fen = generate_fen(cg.__dict__)
         best_move = get_best_move(fen).upper()
