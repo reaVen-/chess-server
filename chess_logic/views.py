@@ -19,7 +19,7 @@ def get(engine):
     while True:
         text = engine.stdout.readline().strip()
         if text == 'readyok':
-            break
+            return text
         if text.startswith("bestmove"):
             return text
 
@@ -29,9 +29,10 @@ def get_best_move(fen):
     put("position fen %s"%fen, engine)
     get(engine)
     put("go movetime 5000", engine)
-    time.sleep(5)
-
-    return get(engine)
+    time.sleep(6)
+    best_move = get(engine)
+    print best_move
+    return best_move
 
 def generate_board():
     counter = 0
