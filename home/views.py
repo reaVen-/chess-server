@@ -57,12 +57,14 @@ def login_or_create_user(username, password):
     return user
 
 def index(request):
+    """
     if 'player2' in request.session:
         try:
             if ChessUser.objects.get(pk=int(request.session['player2']['pk'])).username == "Magnus Carlsen":
                 del request.session['player2']
         except:
             pass
+    """
 
     if request.method == "POST":
         for post in request.POST:
