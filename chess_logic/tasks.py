@@ -10,11 +10,11 @@ def test(param):
 
 @shared_task
 def make_ai_move(game_id):
-	game_data = ChessGame.objects.get(pk=game_id)
-	game_data.ab = json.loads(game_data.ab)
+    game_data = ChessGame.objects.get(pk=game_id)
+    game_data.ab = json.loads(game_data.ab)
     fen = generate_fen(game_data.__dict__)
     best_move = get_best_move(fen).upper()
-	return 'FINISHED TASK - BEST MOVE: %s' % best_move
+    return 'FINISHED TASK - BEST MOVE: %s' % best_move
 
 
 def put(command, engine):
