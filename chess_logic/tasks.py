@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 from celery import shared_task
 from chess_logic.models import ChessGame
+from home.models import ChessUser
 from .chess_rules import move, checkmate, check, pawn_over, replace_pawn, brick_to_index
 
 import json, subprocess, time
@@ -12,11 +13,24 @@ def test(param):
 @shared_task
 def make_ai_move(game_id):
     game_data = ChessGame.objects.get(pk=game_id)
-    game_data.ab = json.loads(game_data.ab)
-    fen = generate_fen(game_data.__dict__)
-    best_move = get_best_move(fen).upper()
-    do_move(best_move, game_data)
-    return 'FINISHED TASK - BEST MOVE: %s' % best_move
+    if ai_turn(game_data):
+        game_data.ab = json.loads(game_data.ab)
+        fen = generate_fen(game_data.__dict__)
+        best_move = get_best_move(fen).upper()
+        do_move(best_move, game_data)
+        return 'FINISHED TASK - BEST MOVE: %s' % best_move
+    else:
+        return 'FINISHED TASK - NOT MY TURN'
+
+def ai_turn(cg):
+    ai = ChessUser.objects.get(username="Magnus Carlsen")
+    if cg.turn == "hvit":
+        if str(ai.pk) == str(cg.player_white_pk):
+            return True
+    else:
+        if str(ai.pk) == str(cg.player_black_pk):
+            return True
+    return False
 
 
 def do_move(this_move, cg):
