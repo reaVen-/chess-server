@@ -1,8 +1,8 @@
 #-*- coding: utf-8 -*-
 def init_bricks():
-    hb = {"A1":"Trn", "B1":"Hest", "C1":"Lper","D1":"Dronning","E1":"Konge","F1":"Lper","G1":"Hest","H1":"Trn",
+    hb = {"A1":"Trn", "B1":"Hest", "C1":"Lper","D1":"Konge","E1":"Dronning","F1":"Lper","G1":"Hest","H1":"Trn",
           "A2":"Bonde", "B2":"Bonde", "C2":"Bonde", "D2":"Bonde", "E2":"Bonde", "F2":"Bonde", "G2":"Bonde", "H2":"Bonde"}
-    sb = {"A8":"Trn", "B8":"Hest", "C8":"Lper","D8":"Dronning","E8":"Konge","F8":"Lper","G8":"Hest","H8":"Trn",
+    sb = {"A8":"Trn", "B8":"Hest", "C8":"Lper","D8":"Konge","E8":"Dronning","F8":"Lper","G8":"Hest","H8":"Trn",
           "A7":"Bonde", "B7":"Bonde", "C7":"Bonde", "D7":"Bonde", "E7":"Bonde", "F7":"Bonde", "G7":"Bonde", "H7":"Bonde"}
     return {'hb':hb, 'sb':sb}
 
