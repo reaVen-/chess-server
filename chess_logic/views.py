@@ -92,11 +92,11 @@ def do_move(request, ai_move=None):
             #check if user is trying to move king for first time
             if hb[start] == "Konge" and cg.white_king_moved == False:
                 #check if user tries castling right
-                if end == "G1" and cg.white_tower_right_moved == False:
+                if end == "F1" and cg.white_tower_right_moved == False:
                     #set castling to true
                     castling_right = True
                 #check if user tries castling left
-                elif end == "C1" and cg.white_tower_left_moved == False:
+                elif end == "B1" and cg.white_tower_left_moved == False:
                     #set castling to true
                     castling_left = True
 
@@ -107,7 +107,7 @@ def do_move(request, ai_move=None):
                 #update bricks in database
                 ab = {'hb':_hb, 'sb':_sb}
                 #check if white moved his king or tower
-                if start == "E1" and hb[start] == "Konge":
+                if start == "D1" and hb[start] == "Konge":
                     cg.white_king_moved = True
 
                 #check if white moved his tower from initial position
@@ -136,10 +136,10 @@ def do_move(request, ai_move=None):
             #check if user is trying to move king for first time
             if sb[start] == "Konge" and cg.black_king_moved == False:
                 #check if user tries castling right
-                if end == "G8" and cg.black_tower_right_moved == False:
+                if end == "F8" and cg.black_tower_right_moved == False:
                     #set castling to true
                     castling_right = True
-                elif end == "C8" and cg.black_tower_left_moved == False:
+                elif end == "B8" and cg.black_tower_left_moved == False:
                     #set castling to true
                     castling_left = True
 
@@ -147,7 +147,7 @@ def do_move(request, ai_move=None):
             if sb != _sb:
                 ab = {'hb':_hb, 'sb':_sb}
                 #check if black moved his king from initial position
-                if start == "E8" and sb[start] == "Konge":
+                if start == "D8" and sb[start] == "Konge":
                     cg.black_king_moved = True
 
                 #check if black moved his tower from initial position
