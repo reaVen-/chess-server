@@ -57,6 +57,10 @@ def login_or_create_user(username, password):
     return user
 
 def index(request):
+    if 'player2' in request.session:
+        if ChessUser.objects.get(pk=request.session['player2']).username == "Magnus Carlsen":
+            del request.session['player2']
+
     if request.method == "POST":
         for post in request.POST:
             print post, request.POST[post]
