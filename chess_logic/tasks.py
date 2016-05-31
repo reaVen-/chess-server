@@ -20,7 +20,7 @@ def make_ai_move(game_id):
 
 
 def do_move(this_move, cg):
-    ab = json.loads(cg.ab)
+    ab = cg.ab
     hb = ab['hb']
     sb = ab['sb']
     gameover = cg.game_over
