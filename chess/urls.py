@@ -20,5 +20,5 @@ urlpatterns = [
     url(r'^game/poll/', "chess_logic.views.poll", name="poll"),
     #url(r'^game/poll_best_move/', "chess_logic.views.poll_best_move", name="poll_best_move"),
     url(r'^game/', "chess_logic.views.game", name="game"),
-    url(r'^ai/', "chess_logic.views.ai", name="ai"),
+    url(r'^ai/poll/', "chess_logic.views.poll", name="ai_poll"),
 ]

@@ -38,7 +38,6 @@ def poll_best_move(request):
 """
 
 
-
 def poll(request):
     if 'game_id' in request.session:
         game_data = ChessGame.objects.get(pk=request.session['game_id'])

@@ -85,12 +85,6 @@
 		</div>
 		{{board|safe}}
 		<br>
-		<div class="card brown darken-2" style="width:400px;margin:auto;">
-			<div class="card-content">
-				<button class="btn" onclick="poll_best_move()"> Calculate best move </button>
-				<div id="best_move"> </div>
-			</div>
-		</div>
 	</div>
 	
 
@@ -110,11 +104,12 @@
 
 		{% if request.session.player2 %}
 			var player2 = {{player2|safe}}
-			if (player2.username == "Magnus Carlsen") {
-				should_poll = true;
-			}
 		{% else %}
 			var should_poll = true;
+		{% endif %}
+
+		{% if player2username|stringformat:"s" == "Magnus Carlsen" %}
+			console.log("halleluja");
 		{% endif %}
 
 		if (should_poll) {
@@ -172,7 +167,7 @@
 			replace_piece(ab.turn, ab.pawn_over);
 		}
 
-		function poll(turn) {
+		function poll(turn, time) {
 			setTimeout(function() {
 					$.ajax({url:"poll/", success: function(data) {
 					js_data = JSON.parse(data);
@@ -181,16 +176,7 @@
 					}
 					
 					}, datatype: "json", complete: poll});
-			}, 3000);
-		};
-
-		function poll_best_move() {
-			$.ajax({url:"poll_best_move/", success: function(data) {
-				js_data = JSON.parse(data);
-				console.log(js_data);
-				var best_move = document.getElementById("best_move");
-				best_move.innerHTML = js_data
-			}, datatype: "json"});
+			}, time);
 		};
 
 		function move(from_p, to) {
