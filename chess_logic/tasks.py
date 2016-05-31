@@ -1,8 +1,8 @@
 from __future__ import absolute_import
-
 from celery import shared_task
-
 from chess_logic.models import ChessGame
+
+import json, subprocess, time
 
 @shared_task
 def test(param):
