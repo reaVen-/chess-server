@@ -8,38 +8,9 @@ from home.models import Challenge, ChessUser
 
 from chess_logic.models import ChessGame
 import json, subprocess, time
-from chess_rules import init_bricks, move, checkmate, check, pawn_over, replace_pawn, generate_fen
+from chess_rules import init_bricks, move, checkmate, check, pawn_over, replace_pawn
 from home.views import get_active_matches
 from chess_logic.tasks import make_ai_move
-
-def put(command, engine):
-    engine.stdin.write(command+'\n')
-
-def get(engine):
-    engine.stdin.write('isready\n')
-    while True:
-        text = engine.stdout.readline().strip()
-        if text == 'readyok':
-            return text
-        if text.startswith("bestmove"):
-            return text
-
-def get_best_move(fen):
-    engine = subprocess.Popen('/usr/games/stockfish', universal_newlines=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    get(engine)
-    put("position fen %s"%fen, engine)
-    get(engine)
-    put("go movetime 5000", engine)
-    time.sleep(6)
-    try:
-        best_move = get(engine).split(" ")[1]
-    except:
-        best_move = "Could not find a best move.. Sorry :("
-
-    put("quit",engine)
-    get(engine)
-
-    return best_move
 
 def generate_board():
     counter = 0
@@ -56,6 +27,7 @@ def generate_board():
         board_html += "<br>"
     return board_html
 
+"""
 def poll_best_move(request):
     if 'game_id' in request.session:
         game_data = ChessGame.objects.get(pk=request.session['game_id'])
@@ -63,6 +35,7 @@ def poll_best_move(request):
         fen = generate_fen(game_data.__dict__)
         best_move = get_best_move(fen)
         return HttpResponse(json.dumps(best_move))
+"""
 
 
 
@@ -336,7 +309,7 @@ def ai(request):
     print ai_move
 
     if ai_move:
-        make_ai_move.delay(request)
+        make_ai_move.delay(int(cg.pk))
         """
         cg.ab = json.loads(cg.ab)
         fen = generate_fen(cg.__dict__)
