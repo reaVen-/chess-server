@@ -113,7 +113,7 @@
 		{% endif %}
 		should_poll = true;
 		if (should_poll) {
-			poll(turn)
+			poll(turn, 6000)
 		}
 
 		console.log("game_over:" + game_over);
