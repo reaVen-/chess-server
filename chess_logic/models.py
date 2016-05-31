@@ -22,6 +22,9 @@ class ChessGame(models.Model):
 	white_tower_right_moved = models.BooleanField(default=False)
 	black_tower_left_moved = models.BooleanField(default=False)
 	black_tower_right_moved = models.BooleanField(default=False)
+
+	#stockfish working on this game
+	looking_for_move = models.BooleanField(default=False)
 	
 
 	

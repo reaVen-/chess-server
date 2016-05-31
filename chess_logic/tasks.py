@@ -13,10 +13,13 @@ def test(param):
 @shared_task
 def make_ai_move(game_id):
     game_data = ChessGame.objects.get(pk=game_id)
-    if ai_turn(game_data):
+    if ai_turn(game_data) and not game_data.looking_for_move:
+        game_data.looking_for_move = True
+        game_data.save()
         game_data.ab = json.loads(game_data.ab)
         fen = generate_fen(game_data.__dict__)
         best_move = get_best_move(fen).upper()
+        game_data.looking_for_move = False
         do_move(best_move, game_data)
         return 'FINISHED TASK - BEST MOVE: %s' % best_move
     else:
