@@ -46,6 +46,15 @@ def poll(request):
         'turn':game_data.turn, 'pawn_over':game_data.pawn_over}
         return HttpResponse(json.dumps(data))
 
+def ai_poll(request):
+    if 'game_id' in request.session:
+        make_ai_move(request.session['game_id'])
+        game_data = ChessGame.objects.get(pk=request.session['game_id'])
+        ab = json.loads(game_data.ab)
+        data = {'hb':ab['hb'], 'sb':ab['sb'], 'game_over':game_data.game_over,
+        'turn':game_data.turn, 'pawn_over':game_data.pawn_over}
+        return HttpResponse(json.dumps(data))
+
 def do_move(request, ai_move=None):
     if ai_move:
         this_move = ai_move
