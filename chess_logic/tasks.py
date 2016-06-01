@@ -19,8 +19,8 @@ def make_ai_move(game_id):
         game_data.ab = json.loads(game_data.ab)
         fen = generate_fen(game_data.__dict__)
         best_move = get_best_move(fen).upper()
-        game_data.looking_for_move = False
         do_move(best_move, game_data)
+        game_data.looking_for_move = False
         return 'FINISHED TASK - BEST MOVE: %s' % best_move
     else:
         return 'FINISHED TASK - NOT MY TURN'
@@ -152,7 +152,6 @@ def get_best_move(fen):
         best_move = "Could not find a best move.. Sorry :("
 
     put("quit",engine)
-    get(engine)
 
     return best_move
 
