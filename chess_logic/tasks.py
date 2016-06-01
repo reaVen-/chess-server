@@ -19,8 +19,9 @@ def make_ai_move(game_id):
         game_data.ab = json.loads(game_data.ab)
         fen = generate_fen(game_data.__dict__)
         best_move = get_best_move(fen).upper()
-        do_move(best_move, game_data)
+        game_data = do_move(best_move, game_data)
         game_data.looking_for_move = False
+        game_data.save()
         return 'FINISHED TASK - BEST MOVE: %s' % best_move
     else:
         return 'FINISHED TASK - NOT MY TURN'
@@ -124,7 +125,7 @@ def do_move(this_move, cg):
     
     cg.ab = json.dumps(ab)
     cg.game_over = gameover
-    cg.save()
+    return cg
 
 
 def put(command, engine):
