@@ -12,6 +12,7 @@ def test(param):
 
 @shared_task
 def make_ai_move(game_id):
+    #FIX when pawn move over move will be like E7E8Q
     game_data = ChessGame.objects.get(pk=game_id)
     if ai_turn(game_data) and not game_data.looking_for_move:
         game_data.looking_for_move = True
