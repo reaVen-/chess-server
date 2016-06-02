@@ -22,7 +22,7 @@ def make_ai_move(game_id):
         game_data = do_move(best_move, game_data)
         game_data.looking_for_move = False
         game_data.save()
-        return 'FINISHED TASK - BEST MOVE: %s' % best_move
+        return 'FINISHED TASK - BEST MOVE: %s\nFEN: %s' % (best_move, fen)
     else:
         return 'FINISHED TASK - NOT MY TURN'
 
