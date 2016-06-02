@@ -27,16 +27,6 @@ def generate_board():
         board_html += "<br>"
     return board_html
 
-"""
-def poll_best_move(request):
-    if 'game_id' in request.session:
-        game_data = ChessGame.objects.get(pk=request.session['game_id'])
-        game_data.ab = json.loads(game_data.ab)
-        fen = generate_fen(game_data.__dict__)
-        best_move = get_best_move(fen)
-        return HttpResponse(json.dumps(best_move))
-"""
-
 
 def poll(request):
     if 'game_id' in request.session:
@@ -48,7 +38,7 @@ def poll(request):
 
 def ai_poll(request):
     if 'game_id' in request.session:
-        make_ai_move(request.session['game_id'])
+        make_ai_move.delay(int(request.session['game_id']))
         game_data = ChessGame.objects.get(pk=request.session['game_id'])
         ab = json.loads(game_data.ab)
         data = {'hb':ab['hb'], 'sb':ab['sb'], 'game_over':game_data.game_over,
