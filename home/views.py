@@ -27,13 +27,15 @@ def get_active_matches(request):
             if game.game_over == "0":
                 wp = ChessUser.objects.get(pk=game.player_white_pk).username
                 bp = ChessUser.objects.get(pk=game.player_black_pk).username
-                print type(p1), type(game.player_white_pk), type(game.turn)
                 if str(game.player_white_pk) == str(p1) and game.turn == "hvit":
                     p1turn = True
                 elif str(game.player_black_pk) == str(p1) and game.turn == "svart":
                     p1turn = True
                 else:
                     p1turn = False
+
+                if wp == "Magnus Carlsen" or bp == "Magnus Carlsen":
+                    continue
 
                 matches_player1.append((wp, bp, p1turn, game.pk))
     return matches_player1
@@ -57,15 +59,6 @@ def login_or_create_user(username, password):
     return user
 
 def index(request):
-    """
-    if 'player2' in request.session:
-        try:
-            if ChessUser.objects.get(pk=int(request.session['player2']['pk'])).username == "Magnus Carlsen":
-                del request.session['player2']
-        except:
-            pass
-    """
-
     if request.method == "POST":
         for post in request.POST:
             print post, request.POST[post]
