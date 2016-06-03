@@ -66,7 +66,7 @@ def do_move(this_move, cg):
                 #update bricks in database
                 ab = {'hb':_hb, 'sb':_sb}
                 #check if white moved his king or tower
-                if start == "E1" and hb[start] == "Konge":
+                if start == "D1" and hb[start] == "Konge":
                     cg.white_king_moved = True
 
                 #check if white moved his tower from initial position
@@ -102,7 +102,7 @@ def do_move(this_move, cg):
             if sb != _sb:
                 ab = {'hb':_hb, 'sb':_sb}
                 #check if black moved his king from initial position
-                if start == "E8" and sb[start] == "Konge":
+                if start == "D8" and sb[start] == "Konge":
                     cg.black_king_moved = True
 
                 #check if black moved his tower from initial position
