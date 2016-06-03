@@ -72,7 +72,9 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
                         if not check(_hb, _sb, _hb, _sb):
                             _hb, _sb = make_new("E1", "F1", _hb, _sb)
                             if not check(_hb, _sb, _hb, _sb):
-                                legal_moves_list.append("F1")
+                                _hb, _sb = make_new("F1", "G1", _hb, _sb)
+                                if not check(_hb, _sb, _hb, _sb):
+                                    legal_moves_list.append("G1")
             elif sb == pb:
                 #check if left tower is there
                 if sb.get("A8", "") == "Trn" and castling_left:
@@ -97,7 +99,9 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
                         if not check(_sb, _hb, _hb, _sb):
                             _sb, _hb = make_new("E8", "F8", _hb, _sb)
                             if not check(_sb, _hb, _hb, _sb):
-                                legal_moves_list.append("F8")
+                                _sb, _hb = make_new("F8", "G8", _hb, _sb)
+                                    if not check(_sb, _hb, _hb, _sb):
+                                        legal_moves_list.append("G8")
 
         #castle code
         delta = [(-1, 0),(1, 0),(1, 1),(0, 1),(-1, 1),(1, -1),(0, -1),(-1,-1)]

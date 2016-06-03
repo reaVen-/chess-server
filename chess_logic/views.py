@@ -92,7 +92,7 @@ def do_move(request, ai_move=None):
             #check if user is trying to move king for first time
             if hb[start] == "Konge" and cg.white_king_moved == False:
                 #check if user tries castling right
-                if end == "F1" and cg.white_tower_right_moved == False:
+                if end == "G1" and cg.white_tower_right_moved == False:
                     #set castling to true
                     castling_right = True
                 #check if user tries castling left
@@ -136,7 +136,7 @@ def do_move(request, ai_move=None):
             #check if user is trying to move king for first time
             if sb[start] == "Konge" and cg.black_king_moved == False:
                 #check if user tries castling right
-                if end == "F8" and cg.black_tower_right_moved == False:
+                if end == "G8" and cg.black_tower_right_moved == False:
                     #set castling to true
                     castling_right = True
                 elif end == "B8" and cg.black_tower_left_moved == False:
