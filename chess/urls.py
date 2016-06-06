@@ -21,5 +21,5 @@ urlpatterns = [
     url(r'^game/', "chess_logic.views.game", name="game"),
     url(r'^ai/poll/', "chess_logic.views.ai_poll", name="ai_poll"),
     url(r'^ai/', "chess_logic.views.ai", name="ai"),
-    url(r'^beat/', "home.views.beat" name="beat"),
+    url(r'^beat/', "home.views.beat", name="beat"),
 ]
