@@ -4,6 +4,7 @@ from home.models import ChessUser, Challenge
 from django import forms
 from django.http import HttpResponseRedirect
 from chess_logic.models import ChessGame
+from django.views.decorators.csrf import csrf_exempt
 import subprocess
 import hashlib
 
@@ -17,6 +18,7 @@ class OpponentPicker(forms.Form):
             choices.append((user.pk, user.username))
         self.fields['opponent'] = forms.ChoiceField(choices=choices)
 
+@csrf_exempt
 def beat(request):
     output = subprocess.check_output(["sudo", "git", "pull"])
     return HttpResponseRedirect("/")
