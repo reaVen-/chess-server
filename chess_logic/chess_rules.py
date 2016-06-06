@@ -69,43 +69,40 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
         delta = [(-2, 1), (-2,-1), (2, 1), (2,-1), (1, 2), (-1, 2), (1, -2), (-1, -2)]
         moves =[[(x+index[0], y+index[1])] for x,y in delta if 0 <= x+index[0] <= 7 and 0 <= y+index[1] <= 7]
     elif kind == "K":
-        #should also make it possible to do castling
-        #castle code
-        if castling_left or castling_right:
-            #check if its white turn
-            if hb == pb:
-                #check if left tower is there
-                if hb.get("A1", "") == "Trn" and castling_left:
-                    #check if path is clear for castling
-                    if empty(["C1", "B1"]):
-                        #check if king can move without getting in chess
-                        if castling(["D1C1", "C1B1"], hb, sb, hb, sb):
-                            legal_moves_list("B1")
-                    
-                #check if right tower is there
-                if hb.get("H1", "") == "Trn" and castling_right:
-                    #check if path is clear for castling
-                    if empty(["E1", "F1", "G1"], hb, sb)
-                        #check if king can move without getting in chess
-                        if castling(["D1E1", "E1F1", "F1G1"], hb, sb, hb, sb):
-                            legal_moves_list.append("G1")
+        #check if its white turn
+        if hb == pb:
+            #check if left tower is there
+            if hb.get("A1", "") == "Trn" and castling_left:
+                #check if path is clear for castling
+                if empty(["C1", "B1"]):
+                    #check if king can move without getting in chess
+                    if castling(["D1C1", "C1B1"], hb, sb, hb, sb):
+                        legal_moves_list("B1")
+                
+            #check if right tower is there
+            if hb.get("H1", "") == "Trn" and castling_right:
+                #check if path is clear for castling
+                if empty(["E1", "F1", "G1"], hb, sb):
+                    #check if king can move without getting in chess
+                    if castling(["D1E1", "E1F1", "F1G1"], hb, sb, hb, sb):
+                        legal_moves_list.append("G1")
 
-
-            elif sb == pb:
-                #check if left tower is there
-                if sb.get("A8", "") == "Trn" and castling_left:
-                    #check if path is clear for castling
-                    if empty(["B8", "C8"], hb, sb):
-                        #check if king can move without getting in chess
-                        if castling(["D8C8", "C8B8"], sb, hb, hb, sb):
-                            legal_moves_list.append("B8")
-                #check if right tower is there
-                if sb.get("H8", "") == "Trn" and castling_right:
-                    #check if path is clear for castling
-                    if empty(["E8, F8, G8"], hb, sb):
-                        #check if king can move without getting in chess
-                        if castling(["D8E8", "E8F8", "F8G8"], sb, hb, hb, sb):
-                            legal_moves_list.append("G8")
+        #check if its black turn
+        elif sb == pb:
+            #check if left tower is there
+            if sb.get("A8", "") == "Trn" and castling_left:
+                #check if path is clear for castling
+                if empty(["B8", "C8"], hb, sb):
+                    #check if king can move without getting in chess
+                    if castling(["D8C8", "C8B8"], sb, hb, hb, sb):
+                        legal_moves_list.append("B8")
+            #check if right tower is there
+            if sb.get("H8", "") == "Trn" and castling_right:
+                #check if path is clear for castling
+                if empty(["E8, F8, G8"], hb, sb):
+                    #check if king can move without getting in chess
+                    if castling(["D8E8", "E8F8", "F8G8"], sb, hb, hb, sb):
+                        legal_moves_list.append("G8")
 
         #castle code
         delta = [(-1, 0),(1, 0),(1, 1),(0, 1),(-1, 1),(1, -1),(0, -1),(-1,-1)]
