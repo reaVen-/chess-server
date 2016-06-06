@@ -4,7 +4,7 @@ from home.models import ChessUser, Challenge
 from django import forms
 from django.http import HttpResponseRedirect
 from chess_logic.models import ChessGame
-
+import subprocess
 import hashlib
 
 class OpponentPicker(forms.Form):
@@ -18,7 +18,7 @@ class OpponentPicker(forms.Form):
         self.fields['opponent'] = forms.ChoiceField(choices=choices)
 
 def beat(request):
-    print request.POST
+    output = subprocess.check_output(["sudo", "git", "pull"])
 
 def get_active_matches(request):
     """creates a list of active matches for player 1"""
