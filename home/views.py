@@ -19,6 +19,7 @@ class OpponentPicker(forms.Form):
 
 def beat(request):
     output = subprocess.check_output(["sudo", "git", "pull"])
+    return HttpResponseRedirect("/")
 
 def get_active_matches(request):
     """creates a list of active matches for player 1"""
