@@ -17,6 +17,9 @@ class OpponentPicker(forms.Form):
             choices.append((user.pk, user.username))
         self.fields['opponent'] = forms.ChoiceField(choices=choices)
 
+def beat(request):
+    print request.POST
+
 def get_active_matches(request):
     """creates a list of active matches for player 1"""
     matches_player1 = []

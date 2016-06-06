@@ -196,7 +196,7 @@ def checkmate(pb, ob, hb, sb):
     return True
 
 def pawn(choice):
-    d = {'D':'Dronning', 'T':'Trn', 'L':'Lper', 'H':'Hest'}
+    d = {'D':'Dronning', 'T':'Trn', 'L':'Lper', 'H':'Hest', 'N':'Hest', 'B':'Lper', 'Q':'Dronning'}
     return d[choice]
 
 def move(pb, ob, start, end, hb, sb, castling_left=False, castling_right=False):

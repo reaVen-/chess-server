@@ -3,16 +3,10 @@ from celery import shared_task
 from chess_logic.models import ChessGame
 from home.models import ChessUser
 from .chess_rules import move, checkmate, check, pawn_over, replace_pawn, brick_to_index
-
 import json, subprocess, time
 
 @shared_task
-def test(param):
-    return 'The test task executed with argument "%s" ' % param
-
-@shared_task
 def make_ai_move(game_id):
-    #FIX when pawn move over move will be like E7E8Q
     game_data = ChessGame.objects.get(pk=game_id)
     if ai_turn(game_data) and not game_data.looking_for_move:
         game_data.looking_for_move = True
@@ -23,9 +17,8 @@ def make_ai_move(game_id):
         game_data = do_move(best_move, game_data)
         game_data.looking_for_move = False
         game_data.save()
-        return 'FINISHED TASK - BEST MOVE: %s\nFEN: %s' % (best_move, fen)
-    else:
-        return 'FINISHED TASK - NOT MY TURN'
+        return 'FINISHED TASK - BEST MOVE: %s FEN: %s' % (best_move, fen)
+    return 'FINISHED TASK - NOT MY TURN'
 
 def ai_turn(cg):
     ai = ChessUser.objects.get(username="Magnus Carlsen")
@@ -37,7 +30,6 @@ def ai_turn(cg):
             return True
     return False
 
-
 def do_move(this_move, cg):
     ab = cg.ab
     hb = ab['hb']
@@ -46,7 +38,6 @@ def do_move(this_move, cg):
 
     start = this_move[:2]
     end = this_move[2:]
-
 
 
     if cg.turn == "hvit":
@@ -78,8 +69,8 @@ def do_move(this_move, cg):
                 #change turn
                 cg.turn = "svart"
                 if pawn_over(_hb):
-                    cg.pawn_over = True
-                    cg.turn = "hvit"
+                    ab['hb'] = replace_pawn(ab['hb'], best_move[-4].upper())
+
 
             if checkmate(_sb, _hb, _hb, _sb):
                 if check(_sb, _hb, _hb, _sb):
@@ -113,8 +104,7 @@ def do_move(this_move, cg):
 
                 cg.turn = "hvit"
                 if pawn_over(_sb):
-                    cg.pawn_over = True
-                    cg.turn = "svart"
+                    ab['sb'] = replace_pawn(ab['sb'], best_move[-4].upper())
 
             if checkmate(_hb, _sb, _hb, _sb):
                 if check(_hb, _sb, _hb, _sb):
