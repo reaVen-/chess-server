@@ -21,6 +21,7 @@ class OpponentPicker(forms.Form):
 @csrf_exempt
 def beat(request):
     output = subprocess.check_output(["sudo", "git", "pull"])
+    print output
     return HttpResponseRedirect("/")
 
 def get_active_matches(request):
