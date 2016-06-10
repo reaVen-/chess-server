@@ -3,6 +3,7 @@
 #Installation Notes (Debian)
 apt-get:
 redis-server
+supervisor
 
 pip:
 django
