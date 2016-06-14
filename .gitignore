@@ -56,6 +56,9 @@ static/
 logs/
 chess/local_settings.py
 bin/
+include/
+run/
+local/
 
 # Sphinx documentation
 docs/_build/
