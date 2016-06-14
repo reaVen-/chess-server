@@ -4,10 +4,16 @@ SOCKFILE=/home/chess/chess-server/run/gunicorn.sock  # we will communicte using 
 USER=chess                                        # the user to run as
 GROUP=users                                     # the group to run as
 NUM_WORKERS=3                                     # how many worker processes should Gunicorn spawn
-DJANGO_SETTINGS_MODULE=hello.local_settings             # which settings file should Django use
+DJANGO_SETTINGS_MODULE=chess.local_settings             # which settings file should Django use
 DJANGO_WSGI_MODULE=chess.wsgi                     # WSGI module name
 
 echo "Starting $NAME as `whoami`"
+
+# Activate the virtual environment
+cd $DJANGODIR
+source ../bin/activate
+export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+export PYTHONPATH=$DJANGODIR:$PYTHONPATH
 
 # Create the run directory if it doesn't exist
 RUNDIR=$(dirname $SOCKFILE)
