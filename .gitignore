@@ -54,6 +54,7 @@ coverage.xml
 db.sqlite3
 static/
 logs/
+chess/local_settings.py
 
 # Sphinx documentation
 docs/_build/

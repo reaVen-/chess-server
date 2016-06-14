@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+from django.db import transaction
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
@@ -215,6 +216,7 @@ def game(request):
         data = json.dumps(ab)
         cg = ChessGame(ab=data, player_white_pk=player1['pk'], player_black_pk=player2['pk'])
         cg.save()
+	transaction.commit()
         request.session['game_id'] = cg.pk
         return HttpResponseRedirect(redirect_to="/game/")
 
