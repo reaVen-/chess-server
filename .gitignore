@@ -55,6 +55,7 @@ db.sqlite3
 static/
 logs/
 chess/local_settings.py
+bin/
 
 # Sphinx documentation
 docs/_build/
