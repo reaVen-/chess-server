@@ -1,16 +1,11 @@
-# Django chess server
+#Chess Platform (server)
+This is a chess platform you can host on your own computer
 
 #Installation Notes (Debian)
-apt-get:
-redis-server
-supervisor
-python-dev
-postgresql
-postgresql-contrib
-libpq-dev
+##Step 1:Software you need
+'''
+apt-get redis-server supervisor python-dev postgresql postgresql-contrib libpq-dev
+'''
 
-pip:
-django
-celery[redis]
-gunicorn
-setproctitle
+##Step 2: Set up users and database
+
