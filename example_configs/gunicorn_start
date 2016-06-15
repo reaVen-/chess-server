@@ -1,7 +1,7 @@
 NAME="chess"                                  # Name of the application
 DJANGODIR=/home/chess/chess-server             # Django project directory
 SOCKFILE=/home/chess/chess-server/run/gunicorn.sock  # we will communicte using this unix socket
-USER=chess                                        # the user to run as
+USER=root                                        # the user to run as
 GROUP=users                                     # the group to run as
 NUM_WORKERS=3                                     # how many worker processes should Gunicorn spawn
 DJANGO_SETTINGS_MODULE=chess.local_settings             # which settings file should Django use

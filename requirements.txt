@@ -1,0 +1,6 @@
+#requirements for chess
+django == 1.9.*
+setproctitle
+gunicorn
+celery[redis]
+psycopg2
