@@ -54,16 +54,18 @@ $ cp example_configs/gunicorn_start bin
 $ nano bin/gunicorn_start
 $ chmod u+x bin/gunicorn_start
 ```
-make sure gunicorn is always running afer reboot, crash etc with supervisor
+make sure gunicorn and celery is always running afer reboot, crash etc with supervisor
 in a terminal with root copy the config
 and edit it with your paths
 ```
 $ cp /apps/chess-server/example_configs/gunicorn-chess.conf /etc/supervisor/conf.d/
+$ cp /apps/chess-server/example_configs/celery-chess.conf /etc/supervisor/conf.d/
 ```
 in the normal terminal with your user create directory for logs
 ```
 $ mkdir logs
 $ touch logs/gunicorn_supervisor.log
+$ touch logs/celery-worker.log
 ```
 make supervisor see the changes (root terminal)
 ```
