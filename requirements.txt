@@ -4,3 +4,4 @@ setproctitle
 gunicorn
 celery[redis]
 psycopg2
+psycogreen
