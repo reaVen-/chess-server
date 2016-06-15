@@ -21,6 +21,12 @@ Shall the new role be allowed to create more new roles? (y/n) n
 $ createdb --owner chess chessdb
 $ logout
 ```
+set up the user the application will run on
+```
+$ sudo groupadd --system app
+$ sudo useradd --system --gid app --shell /bin/bash --home /apps/chess-server chess
+```
+
 set up project directory
 ```
 $ mkdir /apps/
