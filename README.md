@@ -1,12 +1,12 @@
 #Chess Platform (server)
 a django chess platform server that uses: 
--celery for async work (like finding best chess move when playing against AI)
--postgresql database for fast concurrent use
--gevent to push data to users instead of polling
--stockfish to find best move in a given position
--supervisor to make sure the server is always running (after reboot and crashes)
--nginx to serve static files
--gunicorn to run the django wsgi
+- celery for async work (like finding best chess move when playing against AI)
+- postgresql database for fast concurrent use
+- gevent to push data to users instead of polling
+- stockfish to find best move in a given position
+- supervisor to make sure the server is always running (after reboot and crashes)
+- nginx to serve static files
+- gunicorn to run the django wsgi
 
 #Installation Notes (Debian)
 ##Step 1:Software you need
