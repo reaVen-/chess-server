@@ -55,14 +55,14 @@ $ nano chess/local_settings.py
 ```
 build the initial database
 ```
-$ python manage.py migrate --settings=chess.local_settings
+$ python manage.py migrate
 $ python manage.py collectstatic
 ```
 test the server
 ```
-$ python manage.py runserver --settings=chess.local_settings
+$ python manage.py runserver
 ```
-##Step 3: Configure gunucorn to run your app
+##Step 3: Configure gunicorn to run your app
 set up a gunicorn start script (change paths in gunicorn_start)
 ```
 $ cp example_configs/gunicorn_start bin
