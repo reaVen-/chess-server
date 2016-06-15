@@ -4,7 +4,7 @@ This is a chess platform you can host on your own computer
 #Installation Notes (Debian)
 ##Step 1:Software you need
 ```
-apt-get redis-server supervisor python-dev python-virtualenv postgresql postgresql-contrib libpq-dev git git-core stockfish build-essential nginx
+apt-get redis-server supervisor python-dev python-virtualenv postgresql postgresql-contrib libpq-dev git git-core stockfish build-essential nginx libevent-dev
 ```
 ##Step 2: Set up users and database
 log in to postgres user and create a new database and a database user
