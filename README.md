@@ -13,7 +13,7 @@ a django chess platform server that uses:
 ```
 apt-get redis-server supervisor python-dev python-virtualenv postgresql postgresql-contrib libpq-dev git git-core stockfish build-essential nginx libevent-dev
 ```
-##Step 2: Set up users and database
+##Step 2: Set up project, users and database
 log in to postgres user and create a new database and a database user
 ```
 $ su postgres
@@ -56,11 +56,13 @@ $ nano chess/local_settings.py
 build the initial database
 ```
 $ python manage.py migrate --settings=chess.local_settings
+$ python manage.py collectstatic
 ```
 test the server
 ```
 $ python manage.py runserver --settings=chess.local_settings
 ```
+##Step 3: Configure gunucorn to run your app
 set up a gunicorn start script (change paths in gunicorn_start)
 ```
 $ cp example_configs/gunicorn_start bin
@@ -85,6 +87,7 @@ make supervisor see the changes (root terminal)
 $ supervisorctl reread
 $ supervisorctl update
 ```
+##Step 4: Make nginx serve static files
 set up nginx (root terminal)
 ```
 $ cp /apps/chess-server/example_configs/chess.nginxconf /etc/nginx/sites-available/chess
