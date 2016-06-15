@@ -122,9 +122,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/home/pi/www/static/'
+STATIC_ROOT = '/apps/chess-server/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/home/pi/www/media'
+MEDIA_ROOT = '/apps/chess-server/media'
 
 #celery
 BROKER_TRANSPORT_OPTIONS = {'visibility_timeout':60}
