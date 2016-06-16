@@ -3,7 +3,7 @@ import json
 import logging
 from channels import Group
 from channels.sessions import channel_session
-from .models import Room
+from .models import ChessGame
 
 log = logging.getLogger(__name__)
 
@@ -15,6 +15,14 @@ def ws_connect(message):
     # of websocket). So, this is effectively a version of _get_object_or_404.
     prefix, label = message['path'].decode('ascii').strip("/").split("/")
     print "prefix: %s, label: %s"%(prefix, label)
+
+    if prefix == "id" and label:
+        message.channel_session['game_id'] = label
+
+    for sess in message.channel_session:
+        print sess, message.channel_session[sess]
+
+
 
     """
     try:
