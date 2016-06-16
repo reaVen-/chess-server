@@ -9,6 +9,7 @@ from home.models import Challenge, ChessUser
 from .models import Room
 
 from channels import Group
+from channels import Channel
 
 from chess_logic.models import ChessGame
 import json, subprocess, time
@@ -202,7 +203,7 @@ def do_move(request, ai_move=None):
     ab['turn'] = cg.turn;
     ab['pawn_over'] = cg.pawn_over
     data = json.dumps(ab)
-    Group('id-'+str(cg.pk)).send(ab)
+    Channel('id-'+str(cg.pk)).send({'data':data})
 
     return HttpResponse(data)
 
