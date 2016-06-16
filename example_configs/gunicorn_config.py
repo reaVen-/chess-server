@@ -9,7 +9,7 @@ def max_workers():
 #bind = '0.0.0.0:8000'
 max_requests = 10000
 worker_class = 'gevent'
-workers = max_workers()
+workers = 1
 
 
 def post_fork(server, worker):
