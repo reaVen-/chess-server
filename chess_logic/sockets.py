@@ -2,7 +2,7 @@ from socketio.namespace import BaseNamespace
 from socketio.sdjango import namespace
 
 
-@namespace('/echo')
+@namespace('/echo/')
 class EchoNamespace(BaseNamespace):
     def on_msg(self, msg):
         pkt = dict(type='event',
