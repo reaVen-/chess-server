@@ -3,7 +3,7 @@ import json
 import logging
 from channels import Group
 from channels.sessions import channel_session
-from .models import ChessGame
+from .models import ChessGame, Room
 
 log = logging.getLogger(__name__)
 
