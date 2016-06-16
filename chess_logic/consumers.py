@@ -19,9 +19,7 @@ def ws_connect(message):
     if prefix == "id" and label:
         message.channel_session['game_id'] = label
 
-    for sess in message.channel_session:
-        print sess
-
+    print "ss", message.channel_session['game_id']
 
 
     """
