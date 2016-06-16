@@ -13,5 +13,5 @@ workers = max_workers()
 
 
 def post_fork(server, worker):
-    from psycogreen.gevent import psyco_gevent
-    psyco_gevent.make_psycopg_green()
+    from psycogreen.gevent import patch_psycopg
+	patch_psycopg()
