@@ -13,11 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
-from django.views.generic import TemplateView
-
-from socketio import sdjango
-sdjango.autodiscover()
+from django.conf.urls import url
 
 urlpatterns = [
     url(r'^$', "home.views.index", name="index"),
@@ -26,7 +22,4 @@ urlpatterns = [
     url(r'^ai/poll/', "chess_logic.views.ai_poll", name="ai_poll"),
     url(r'^ai/', "chess_logic.views.ai", name="ai"),
     url(r'^beat/', "home.views.beat", name="beat"),
-    url(r'^socket\.io', include(sdjango.urls)),
-    url(r'^echo/', TemplateView.as_view(template_name='echo.html'),
-        name='echo'),
 ]
