@@ -24,6 +24,14 @@ server {
         alias   /apps/chess-server/media/;
     }
 
+    location /socket.io/ {
+        proxy_pass http://chess_app_server;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_redirect off;
+        proxy_http_version 1.1;
+    }
+
     location / {
         # an HTTP header important enough to have its own Wikipedia entry:
         #   http://en.wikipedia.org/wiki/X-Forwarded-For
