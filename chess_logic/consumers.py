@@ -7,19 +7,6 @@ from .models import ChessGame, Room
 
 log = logging.getLogger(__name__)
 
-def get_move(message):
-    prefix, label = message['path'].decode('ascii').strip("/").split("/")
-    print "prefix: %s, label: %s"%(prefix, label)
-
-    if prefix == "id" and label:
-        Group('id-%s'%label, channel_layer=message.channel_layer).add(message.reply_channel)
-        message.channel_session['game_id'] = label
-
-def send_move(message):
-    label = message.channel_session['game_id']
-    Group('chat-'+label, channel_layer=message.channel_layer).send({'text': 'text'})
-
-
 @channel_session
 def ws_connect(message):
     prefix, label = message['path'].decode('ascii').strip("/").split("/")

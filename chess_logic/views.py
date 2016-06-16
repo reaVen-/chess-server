@@ -203,10 +203,6 @@ def do_move(request, ai_move=None):
     ab['turn'] = cg.turn;
     ab['pawn_over'] = cg.pawn_over
     data = json.dumps(ab)
-    try:
-        Channel('id-'+str(cg.pk)).send({'foo':'bar'})
-    except:
-        print "FAILED"
 
     return HttpResponse(data)
 

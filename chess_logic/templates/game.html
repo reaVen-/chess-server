@@ -158,6 +158,10 @@
 			};
 
 			xhttp.open("GET", "?move="+from_p+to, true);
+			var message = {
+	            move: from_p+to,
+	        	}
+        	chatsock.send(JSON.stringify(message));
 			xhttp.send();
 		}
 
