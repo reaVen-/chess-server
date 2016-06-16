@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from django.db import transaction
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response, redirect, render
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from random import randint as random_int
