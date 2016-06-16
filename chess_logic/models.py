@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.utils import timezone
 
 class ChessGame(models.Model):
 	#all bricks
@@ -25,6 +26,13 @@ class ChessGame(models.Model):
 
 	#stockfish working on this game
 	looking_for_move = models.BooleanField(default=False)
-	
 
-	
+class Room(models.Model):
+	name = models.TextField()
+	label = models.SlugField(unique=True)
+
+class Message(models.Model):
+	room = models.ForeignKey(Room, related_name='message')
+	handle = models.TextField()
+	message = models.TextField()
+	timestamp = models.DateTimeField(default=timezone.now, db_index=True)

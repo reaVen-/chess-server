@@ -6,12 +6,34 @@ from django.http import HttpResponse, HttpResponseRedirect
 from random import randint as random_int
 
 from home.models import Challenge, ChessUser
+from .models import Room
 
 from chess_logic.models import ChessGame
 import json, subprocess, time
 from chess_rules import init_bricks, move, checkmate, check, pawn_over, replace_pawn
 from home.views import get_active_matches
 from chess_logic.tasks import make_ai_move
+
+def chat_room(request, label):
+    room, created = Room.objects.get_or_create(label=label)
+
+    messages = reversed(room.messages.order_by('-timestamp')[:50])
+
+    return render(request, "room.html", {'room':room, 'messages':messages})
+
+
+def new_room(request):
+    """
+    Randomly create a new room, and redirect to it.
+    """
+    new_room = None
+    while not new_room:
+        with transaction.atomic():
+            label = "room"
+            if Room.objects.filter(label=label).exists():
+                continue
+            new_room = Room.objects.create(label=label)
+    return redirect(chat_room, label=label)
 
 def generate_board():
     counter = 0
