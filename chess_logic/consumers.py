@@ -9,15 +9,11 @@ log = logging.getLogger(__name__)
 
 @channel_session
 def ws_connect(message):
-    # Extract the room from the message. This expects message.path to be of the
-    # form /chat/{label}/, and finds a Room if the message path is applicable,
-    # and if the Room exists. Otherwise, bails (meaning this is a some othersort
-    # of websocket). So, this is effectively a version of _get_object_or_404.
     prefix, label = message['path'].decode('ascii').strip("/").split("/")
     print "prefix: %s, label: %s"%(prefix, label)
 
     if prefix == "id" and label:
-        Group('id-'+label, channel_layer=message.channel_layer).add(message.reply_channel)
+        Group('id-%s'%label, channel_layer=message.channel_layer).add(message.reply_channel)
         message.channel_session['game_id'] = label
 
     """
