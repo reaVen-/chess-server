@@ -43,6 +43,7 @@ def ws_connect(message):
 @channel_session
 def ws_receive(message):
     # Look up the room from the channel session, bailing if it doesn't exist
+    print "RECEIVED MESSAGE"
     try:
         label = message.channel_session['room']
         room = Room.objects.get(label=label)
