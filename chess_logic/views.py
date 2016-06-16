@@ -29,7 +29,7 @@ def new_room(request):
     new_room = None
     while not new_room:
         with transaction.atomic():
-            label = "room" + str(random_int(1000))
+            label = "room" + str(random_int(1, 1000))
             if Room.objects.filter(label=label).exists():
                 continue
             new_room = Room.objects.create(label=label)
