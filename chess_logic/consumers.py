@@ -20,7 +20,7 @@ def ws_connect(message):
         message.channel_session['game_id'] = label
 
     for sess in message.channel_session:
-        print sess, message.channel_session[sess]
+        print sess
 
 
 
