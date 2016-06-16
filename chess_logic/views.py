@@ -17,7 +17,7 @@ from chess_logic.tasks import make_ai_move
 def chat_room(request, label):
     room, created = Room.objects.get_or_create(label=label)
 
-    messages = reversed(room.message.order_by('-timestamp')[:50])
+    messages = reversed(room.messages.order_by('-timestamp')[:50])
 
     return render(request, "room.html", {'room':room, 'messages':messages})
 
