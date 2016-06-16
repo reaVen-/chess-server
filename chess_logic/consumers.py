@@ -17,10 +17,8 @@ def ws_connect(message):
     print "prefix: %s, label: %s"%(prefix, label)
 
     if prefix == "id" and label:
+        Group('id-'+label, channel_layer=message.channel_layer).add(message.reply_channel)
         message.channel_session['game_id'] = label
-
-    print "ss", message.channel_session['game_id']
-
 
     """
     try:

@@ -115,7 +115,7 @@
 		{% if player2username|stringformat:"s" == "Magnus Carlsen" %}
 			console.log("halleluja");
 		{% endif %}
-		should_poll = true;
+		should_poll = false;
 		if (should_poll) {
 			poll(turn, 6000)
 		}

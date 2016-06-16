@@ -8,6 +8,8 @@ from random import randint as random_int
 from home.models import Challenge, ChessUser
 from .models import Room
 
+from channels import Group
+
 from chess_logic.models import ChessGame
 import json, subprocess, time
 from chess_rules import init_bricks, move, checkmate, check, pawn_over, replace_pawn
@@ -200,6 +202,7 @@ def do_move(request, ai_move=None):
     ab['turn'] = cg.turn;
     ab['pawn_over'] = cg.pawn_over
     data = json.dumps(ab)
+    Group('id-'+str(cg.pk), channel_layer=message.channel_layer).send(data)
 
     return HttpResponse(data)
 
