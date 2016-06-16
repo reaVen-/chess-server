@@ -202,7 +202,7 @@ def do_move(request, ai_move=None):
     ab['turn'] = cg.turn;
     ab['pawn_over'] = cg.pawn_over
     data = json.dumps(ab)
-    Group('id-'+str(cg.pk), channel_layer=message.channel_layer).send(data)
+    Group('id-'+str(cg.pk)).send(data)
 
     return HttpResponse(data)
 
