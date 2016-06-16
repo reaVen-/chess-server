@@ -52,7 +52,7 @@ coverage.xml
 # Django stuff:
 *.log
 db.sqlite3
-static/
+/static/
 logs/
 chess/local_settings.py
 bin/
