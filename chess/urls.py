@@ -21,7 +21,6 @@ urlpatterns = [
     url(r'^game/', "chess_logic.views.game", name="game"),
     url(r'^ai/poll/', "chess_logic.views.ai_poll", name="ai_poll"),
     url(r'^ai/', "chess_logic.views.ai", name="ai"),
-    url(r'^beat/', "home.views.beat", name="beat"),
     url(r'^new/$', "chess_logic.views.new_room", name='new_room'),
     url(r'^(?P<label>[\w-]{,50})/$', "chess_logic.views.chat_room", name='chat_room'),
 ]

@@ -18,12 +18,6 @@ class OpponentPicker(forms.Form):
             choices.append((user.pk, user.username))
         self.fields['opponent'] = forms.ChoiceField(choices=choices)
 
-@csrf_exempt
-def beat(request):
-    output = subprocess.check_output(["sudo", "git", "pull"])
-    print output
-    return HttpResponseRedirect("/")
-
 def get_active_matches(request):
     """creates a list of active matches for player 1"""
     matches_player1 = []
@@ -67,9 +61,6 @@ def login_or_create_user(username, password):
 
 def index(request):
     if request.method == "POST":
-        for post in request.POST:
-            print post, request.POST[post]
-
         #logout player 1
         if 'logout_user_1' in request.POST:
             del request.session['player1']
