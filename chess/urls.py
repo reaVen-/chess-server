@@ -27,6 +27,6 @@ urlpatterns = [
     url(r'^ai/', "chess_logic.views.ai", name="ai"),
     url(r'^beat/', "home.views.beat", name="beat"),
     url(r'^socket\.io', include(sdjango.urls)),
-    url(r'^echo/', TemplateView.as_view(template_name='chess_logic/templates/index.html'),
-        name='inde'),
+    url(r'^echo/', TemplateView.as_view(template_name='echo.html'),
+        name='echo'),
 ]
