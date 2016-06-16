@@ -238,7 +238,6 @@ def game(request):
         data = json.dumps(ab)
         cg = ChessGame(ab=data, player_white_pk=player1['pk'], player_black_pk=player2['pk'])
         cg.save()
-	transaction.commit()
         request.session['game_id'] = cg.pk
         return HttpResponseRedirect(redirect_to="/game/")
 
@@ -284,6 +283,7 @@ def game(request):
                 'player1pk':request.session['player1']['pk'],
                 'player1name':request.session['player1']['username'],
                 'matches_player1':active_matches_player1,
+                'game_id':request.session['game_id']
                 }
 
     if 'player2' in request.session:

@@ -6,5 +6,6 @@ $(function() {
     chatsock.onmessage = function(message) {
         var data = JSON.parse(message.data);
         console.log(data);
+        console.log(game_id);
     };
 });
