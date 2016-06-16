@@ -2,11 +2,11 @@
 a django chess platform server that uses: 
 - celery for async work (like finding best chess move when playing against AI)
 - postgresql database for fast concurrent use
-- gevent to push data to users instead of polling
+- channels to push data to users instead of polling
 - stockfish to find best move in a given position
 - supervisor to make sure the server is always running (after reboot and crashes)
 - nginx to serve static files
-- gunicorn to run the django wsgi
+- daphne to run the django asgi
 
 #Installation Notes (Debian)
 ##Step 1:Software you need
@@ -62,24 +62,19 @@ test the server
 ```
 $ python manage.py runserver
 ```
-##Step 3: Configure gunicorn to run your app
-set up a gunicorn start script (change paths in gunicorn_start)
+##Step 3: Configure daphne to run your app
 ```
-$ cp example_configs/gunicorn_start bin
-$ nano bin/gunicorn_start
-$ chmod u+x bin/gunicorn_start
+$ daphne chess.asgi:channel_layer -h 0.0.0.0 -p 8888
 ```
-make sure gunicorn and celery is always running afer reboot, crash etc with supervisor
+make sure  celery is always running afer reboot, crash etc with supervisor
 in a terminal with root copy the config
 and edit it with your paths
 ```
-$ cp /apps/chess-server/example_configs/gunicorn-chess.conf /etc/supervisor/conf.d/
 $ cp /apps/chess-server/example_configs/celery-chess.conf /etc/supervisor/conf.d/
 ```
 in the normal terminal with your user create directory for logs
 ```
 $ mkdir logs
-$ touch logs/gunicorn_supervisor.log
 $ touch logs/celery-worker.log
 ```
 make supervisor see the changes (root terminal)
