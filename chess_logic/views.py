@@ -204,7 +204,7 @@ def do_move(request, ai_move=None):
     ab['pawn_over'] = cg.pawn_over
     data = json.dumps(ab)
     try:
-        Group('id-'+str(cg.pk)).send({'foo':'bar'})
+        Channel('id-'+str(cg.pk)).send({'foo':'bar'})
     except:
         print "FAILED"
 

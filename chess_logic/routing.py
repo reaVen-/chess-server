@@ -1,8 +1,8 @@
-from . import consumers
+from channels.routing import route
 
-channel_routing = {
-	'websocket.connect': consumers.ws_connect,
-	'websocket.receive': consumers.ws_receive,
-	'websocket.disconnect': consumers.ws_disconnect,
-	
-}
+from .consumers import send_move
+
+channel_routing = [
+    route('send-move',send_move),
+    route('get-move', get_move),
+]
