@@ -102,31 +102,8 @@
 		var player1 = {{player1|safe}};
 		var player_white = "{{player_white|safe}}";
 		var player_black = "{{player_black|safe}}";
-		
+	
 
-		var should_poll = false;
-
-		{% if request.session.player2 %}
-			var player2 = {{player2|safe}}
-		{% else %}
-			var should_poll = true;
-		{% endif %}
-
-		{% if player2username|stringformat:"s" == "Magnus Carlsen" %}
-			console.log("halleluja");
-		{% endif %}
-		should_poll = false;
-		if (should_poll) {
-			poll(turn, 6000)
-		}
-
-		console.log("game_over:" + game_over);
-		console.log("turn: " + turn);
-		console.log("p1: " + player1.pk);
-		console.log("player_white: " + player_white);
-		console.log("player_black: " + player_black);
-
-		console.log(player1.pk == player_black);
 		check_status(game_over, turn);
 
 		var from_square = null;
@@ -171,27 +148,12 @@
 			replace_piece(ab.turn, ab.pawn_over);
 		}
 
-		function poll(turn, time) {
-			setTimeout(function() {
-					$.ajax({url:"poll/", success: function(data) {
-					js_data = JSON.parse(data);
-					if (js_data.turn != turn) {
-						changeBoard(js_data);
-					}
-					
-					}, datatype: "json", complete: poll});
-			}, 6000);
-		};
-
 		function move(from_p, to) {
 			var xhttp = new XMLHttpRequest(); 
 			xhttp.onreadystatechange = function() {
 				if (xhttp.readyState == 4 & xhttp.status == 200) {
 					ab = JSON.parse(xhttp.responseText);
-					changeBoard(ab)
-					console.log(turn)
-					console.log(poll_color)
-
+					changeBoard(ab);
 				}
 			};
 
