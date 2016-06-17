@@ -4,6 +4,7 @@ from chess_logic.models import ChessGame
 from home.models import ChessUser
 from .chess_rules import move, checkmate, check, pawn_over, replace_pawn, brick_to_index
 import json, subprocess, time
+from channels import Group
 
 @shared_task
 def make_ai_move(game_id):
@@ -17,6 +18,10 @@ def make_ai_move(game_id):
         game_data = do_move(best_move, game_data)
         game_data.looking_for_move = False
         game_data.save()
+        ab = json.loads(game_data.ab)
+        data = {'hb':ab['hb'], 'sb':ab['sb'], 'game_over':game_data.game_over,
+        'turn':game_data.turn, 'pawn_over':game_data.pawn_over}
+        Group('id-'+str(game_id)).send({'text':json.dumps(data)})
         return 'FINISHED TASK - BEST MOVE: %s FEN: %s' % (best_move, fen)
     return 'FINISHED TASK - NOT MY TURN'
 
