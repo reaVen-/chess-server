@@ -17,8 +17,6 @@ from django.conf.urls import url
 
 urlpatterns = [
     url(r'^$', "home.views.index", name="index"),
-    url(r'^game/poll/', "chess_logic.views.poll", name="poll"),
     url(r'^game/', "chess_logic.views.game", name="game"),
-    url(r'^ai/poll/', "chess_logic.views.ai_poll", name="ai_poll"),
     url(r'^ai/', "chess_logic.views.ai", name="ai"),
 ]
