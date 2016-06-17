@@ -23,6 +23,11 @@ def ws_connect(message):
 def ws_receive(message):
     # Look up the room from the channel session, bailing if it doesn't exist
     print "RECEIVED MESSAGE"
+
+    data = json.loads(message['text'])
+    print data
+
+    """
     try:
         label = message.channel_session['room']
         room = Room.objects.get(label=label)
@@ -52,6 +57,7 @@ def ws_receive(message):
 
         # See above for the note about Group
         Group('chat-'+label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
+    """
 
 @channel_session
 def ws_disconnect(message):
