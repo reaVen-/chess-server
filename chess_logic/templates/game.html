@@ -111,6 +111,18 @@
 		positionPieces(black, "b");
 		initHandlers();
 
+		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    	var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/id/" + game_id);
+
+	    chatsock.onmessage = function(message) {
+	        var data = JSON.parse(message.data);
+	        console.log(data);
+	    };
+
+	    chatsock.onopen = function() {
+	    	chatsock.send("Hello");
+	    }
+
 
 		function check_status(game_over, turn) {
 			var status = document.getElementById("status");
@@ -158,10 +170,6 @@
 			};
 
 			xhttp.open("GET", "?move="+from_p+to, true);
-			var message = {
-	            move: from_p+to,
-	        	}
-        	chatsock.send(JSON.stringify(message));
 			xhttp.send();
 		}
 
@@ -252,7 +260,6 @@
 </div>
 
 <script type="text/javascript" src='{% static "js/reconnecting-websocket.min.js" %}'></script>
-<script type="text/javascript" src='{% static "js/push.js" %}'></script>
 
 
 {% endblock %}
