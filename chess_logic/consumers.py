@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 def ws_connect(message):
     prefix, label = message['path'].decode('ascii').strip("/").split("/")
     print "prefix: %s, label: %s"%(prefix, label)
-    print message['text']
+    print message.keys()
 
     if prefix == "id" and label:
         Group('id-%s'%label, channel_layer=message.channel_layer).add(message.reply_channel)
