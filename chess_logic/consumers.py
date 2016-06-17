@@ -10,8 +10,10 @@ log = logging.getLogger(__name__)
 @channel_session
 def ws_connect(message):
     prefix, label = message['path'].decode('ascii').strip("/").split("/")
+    data = json.loads(message['text'])
+
     print "prefix: %s, label: %s"%(prefix, label)
-    print message.keys()
+    print data
 
     if prefix == "id" and label:
         Group('id-%s'%label, channel_layer=message.channel_layer).add(message.reply_channel)
