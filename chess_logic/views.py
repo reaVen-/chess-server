@@ -179,6 +179,8 @@ def do_move(request, ai_move=None):
     ab['pawn_over'] = cg.pawn_over
     data = json.dumps(ab)
 
+    Group("id-"+str(cg.pk)).send({'text':data})
+
     return HttpResponse(data)
 
 
