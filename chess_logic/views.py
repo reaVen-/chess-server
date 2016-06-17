@@ -1,5 +1,4 @@
 #-*- coding: utf-8 -*-
-from django.db import transaction
 from django.shortcuts import render_to_response, redirect, render
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
@@ -28,34 +27,6 @@ def generate_board():
         counter += 1
         board_html += "<br>"
     return board_html
-
-def ai_turn(cg):
-    ai = ChessUser.objects.get(username="Magnus Carlsen")
-    if cg.turn == "hvit":
-        if str(ai.pk) == str(cg.player_white_pk):
-            return True
-    else:
-        if str(ai.pk) == str(cg.player_black_pk):
-            return True
-    return False
-
-def poll(request):
-    if 'game_id' in request.session:
-        game_data = ChessGame.objects.get(pk=request.session['game_id'])
-        ab = json.loads(game_data.ab)
-        data = {'hb':ab['hb'], 'sb':ab['sb'], 'game_over':game_data.game_over,
-        'turn':game_data.turn, 'pawn_over':game_data.pawn_over}
-        return HttpResponse(json.dumps(data))
-
-def ai_poll(request):
-    if 'game_id' in request.session:
-        game_data = ChessGame.objects.get(pk=request.session['game_id'])
-        if ai_turn(game_data):
-            make_ai_move.delay(int(request.session['game_id']))
-        ab = json.loads(game_data.ab)
-        data = {'hb':ab['hb'], 'sb':ab['sb'], 'game_over':game_data.game_over,
-        'turn':game_data.turn, 'pawn_over':game_data.pawn_over}
-        return HttpResponse(json.dumps(data))
 
 def do_move(request, ai_move=None):
     if ai_move:
