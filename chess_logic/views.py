@@ -307,32 +307,16 @@ def ai(request):
     if not 'game_id' in request.session:
         return HttpResponseRedirect("/ai/?new_game=1")
 
-    #if AI's move
+    #get game object
     cg = ChessGame.objects.get(pk=int(request.session['game_id']))
 
-    print str(cg.player_white_pk), str(request.session['player2']['pk'])
-
-    if str(cg.player_white_pk) == str(request.session['player2']['pk']) and cg.turn == "hvit":
-        ai_move = True
-    elif str(cg.player_black_pk) == str(request.session['player2']['pk']) and cg.turn == "svart":
-        ai_move = True
-    else:
-        ai_move = False
-
-    print ai_move
-
-    if ai_move:
-        make_ai_move.delay(int(cg.pk))
-        """
-        cg.ab = json.loads(cg.ab)
-        fen = generate_fen(cg.__dict__)
-        best_move = get_best_move(fen).upper()
-        do_move(request, ai_move=best_move)
-        cg.refresh_from_db()
-        """
+    #make ai move (will only move if its his turn)
+    make_ai_move.delay(int(cg.pk))
 
     if request.method == "GET" and 'move' in request.GET:
-        return do_move(request)
+        response = do_move(request)
+        make_ai_move.delay(int(cg.pk))
+        return response
 
     context = {'bricks':cg.ab,
                 'board':generate_board(),
