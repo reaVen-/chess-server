@@ -112,15 +112,16 @@
 		initHandlers();
 
 		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-    	var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/id/" + game_id);
+    	var ws_move_sock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/id/" + game_id);
 
-	    chatsock.onmessage = function(message) {
+	    ws_move_sock.onmessage = function(message) {
 	        var data = JSON.parse(message.data);
-	        console.log(data);
+	        changeBoard(data);
+	        console.log("Received a move, and updated chess board");
 	    };
 
-	    chatsock.onopen = function() {
-	    	chatsock.send("Hello");
+	    ws_move_sock.onopen = function() {
+	    	console.log("Opened a websocket to the server");
 	    }
 
 
