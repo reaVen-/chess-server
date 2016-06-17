@@ -346,6 +346,7 @@ def ai(request):
                 'player2':json.dumps(request.session['player2']),
                 'player2pk':request.session['player2']['pk'],
                 'player2name':request.session['player2']['username'],
+                'game_id':request.session['game_id']
                 }
 
     return render_to_response("game.html", context, context_instance=RequestContext(request))
