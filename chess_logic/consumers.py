@@ -24,7 +24,7 @@ def ws_receive(message):
     # Look up the room from the channel session, bailing if it doesn't exist
     print "RECEIVED MESSAGE"
 
-    data = json.loads(message['text'])
+    data = message['text']
     print data
 
     """
