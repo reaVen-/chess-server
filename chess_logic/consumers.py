@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 @channel_session
 def ws_connect(message):
     prefix, label = message['path'].decode('ascii').strip("/").split("/")
-    data = json.loads(message['text'])
+    data = message['text']
 
     print "prefix: %s, label: %s"%(prefix, label)
     print data
