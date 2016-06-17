@@ -48,7 +48,7 @@ $ source bin/activate
 $ pip install --upgrade pip
 $ pip install -r requirements.txt
 ```
-configure django with your database
+configure django with your database (set database passwords etc)
 ```
 $ cp example_configs/local_settings.py chess
 $ nano chess/local_settings.py
@@ -63,19 +63,18 @@ test the server
 $ python manage.py runserver
 ```
 ##Step 3: Configure daphne to run your app
+test that daphne works
 ```
 $ daphne chess.asgi:channel_layer -h 0.0.0.0 -p 8888
 ```
-make sure  celery is always running afer reboot, crash etc with supervisor
-in a terminal with root copy the config
-and edit it with your paths
+make sure  celery and daphne is always running afer reboot, crash etc with supervisor (root terminal)
 ```
 $ cp /apps/chess-server/example_configs/celery-chess.conf /etc/supervisor/conf.d/
+$ cp /apps/chess-server/example_configs/daphne-chess.conf /etc/supervisor/conf.d/
 ```
-in the normal terminal with your user create directory for logs
+create logs directory in /apps/chess-server/
 ```
 $ mkdir logs
-$ touch logs/celery-worker.log
 ```
 make supervisor see the changes (root terminal)
 ```
@@ -88,6 +87,17 @@ set up nginx (root terminal)
 $ cp /apps/chess-server/example_configs/chess.nginxconf /etc/nginx/sites-available/chess
 $ ln -s /etc/nginx/sites-available/chess /etc/nginx/sites-enabled/chess
 $ service nginx restart
+```
+you may have to delete the default nginx config (root terminal)
+```
+$ rm /etc/nginx/sites-enabled/default
+```
+
+#Finished
+That's it you're server should be running
+you can monitor the logs with for example
+````
+tail -f logs/celery-worker.log
 ```
 
 
