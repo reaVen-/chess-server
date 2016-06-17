@@ -10,10 +10,8 @@ log = logging.getLogger(__name__)
 @channel_session
 def ws_connect(message):
     prefix, label = message['path'].decode('ascii').strip("/").split("/")
-    data = message['text']
 
     print "prefix: %s, label: %s"%(prefix, label)
-    print data
 
     if prefix == "id" and label:
         Group('id-%s'%label, channel_layer=message.channel_layer).add(message.reply_channel)
@@ -26,6 +24,8 @@ def ws_receive(message):
 
     data = message['text']
     print data
+
+    Group("id-"+message.channel_session['game_id']).send({'text':json.dumps({'foo':'bar'})})
 
     """
     try:
