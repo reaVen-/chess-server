@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from random import randint as random_int
 
+from channels import Group
 from home.models import Challenge, ChessUser
 
 from chess_logic.models import ChessGame
