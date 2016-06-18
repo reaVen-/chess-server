@@ -129,11 +129,11 @@ def index(request):
         challenges_player1 = Challenge.objects.filter(player2=p1['pk'])
 
     #gather all active matches for player1
-    matches_player1 = get_active_matches(request)
+    matches = get_active_matches(request)
 
 
     template = 'home/index.html'
     context = {'opponent_picker_form':OpponentPicker,
                 'challenges_player1':challenges_player1,
-                'matches_player1':matches,}
+                'matches':matches,}
     return render_to_response(template, context, context_instance=RequestContext(request))
