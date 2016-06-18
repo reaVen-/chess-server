@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils import timezone
 
+from channels import Group
+
 class ChessGame(models.Model):
 	#all bricks
 	ab = models.CharField(max_length=1000)
@@ -26,3 +28,9 @@ class ChessGame(models.Model):
 
 	#stockfish working on this game
 	looking_for_move = models.BooleanField(default=False)
+
+	def save(self, *args, **kwargs):
+		Super(ChessGame, self).save(*args, **kwargs)
+		Group('user-%s' % self.player_white_pk).send({'text':'yo'})
+		Group('user-%s' % self.player_black_pk).send({'text':'yoyo'})
+
