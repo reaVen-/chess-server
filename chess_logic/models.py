@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 
 from channels import Group
+from json import dumps
 
 class ChessGame(models.Model):
 	#all bricks
@@ -31,6 +32,6 @@ class ChessGame(models.Model):
 
 	def save(self, *args, **kwargs):
 		super(ChessGame, self).save(*args, **kwargs)
-		Group('user-%s' % self.player_white_pk).send({'text':'yo'})
-		Group('user-%s' % self.player_black_pk).send({'text':'yoyo'})
+		Group('user-%s' % self.player_white_pk).send({'text':'match_update'})
+		Group('user-%s' % self.player_black_pk).send({'text':'match_update'})
 

@@ -9,5 +9,6 @@ def home_connect(message):
 
     Group("user-%s" % label, channel_layer=message.channel_layer).add(message.reply_channel)
 
+
 def home_disconnect(message):
     print "home disconnect"
