@@ -1,6 +1,21 @@
 {% extends 'home/base.html' %}
 
 {% block full %}
+	<script>
+	var user_id = "{{ request.session.player1|safe }}";
+	var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+	var ws_home_sock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/user/" + user_id);
+
+    ws_home_sock.onmessage = function(message) {
+        var data = JSON.parse(message.data);
+        console.log("Received an update");
+    };
+
+    ws_home_sock.onopen = function() {
+    	console.log("Opened a websocket to the server");
+    }
+
+	</script>
 	<div class="col s4">
 		{% if request.session.player1 %}
 			<div class="card brown darken-2">
