@@ -23,7 +23,9 @@
 				</div>
 			</div>
 		{% endif %}
-		{% include 'home/matches.html' %}	
+			<div id="matches">
+				{% include 'home/matches.html' %}
+			</div>
 	{% else %}
 		<p></p>
 	{% endif %}
@@ -92,6 +94,19 @@
 	    	console.log("Opened a websocket to the server");
 	    }
 
+	    var user_id = "{{ request.session.player1.pk|safe }}";
+		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+		var ws_home_sock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/user/" + user_id);
+
+	    ws_home_sock.onmessage = function(message) {
+	        console.log("Received an update");
+	        get_matches();
+	    };
+
+	    ws_home_sock.onopen = function() {
+	    	console.log("Opened a websocket to the server");
+	    }
+
 
 		function check_status(game_over, turn) {
 			var status = document.getElementById("status");
@@ -147,6 +162,18 @@
 			for (var i=0; i < ruter.length; i++) {
 				ruter[i].innerHTML = "";
 			}
+		}
+
+		function get_matches() {
+			var xhttp = new XMLHttpRequest(); 
+			xhttp.onreadystatechange = function() {
+				if (xhttp.readyState == 4 & xhttp.status == 200) {
+					$('#matches').html(xhttp.responseText);
+				}
+			};
+
+			xhttp.open("GET", "/get_matches/", true);
+			xhttp.send();
 		}
 
 		function positionPieces(pieces, color) {
