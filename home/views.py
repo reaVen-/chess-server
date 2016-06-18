@@ -44,7 +44,7 @@ def get_active_matches(request):
 def get_matches(request):
     print "here"
     matches = get_active_matches(request)
-    return render("home/matches.html", {'matches':matches})
+    return render(request, "home/matches.html", {'matches':matches})
 
 
 def login_or_create_user(username, password):
