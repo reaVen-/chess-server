@@ -224,7 +224,7 @@ def game(request):
 
     all_b = ChessGame.objects.get(pk=request.session['game_id'])
     template = 'game.html'
-    active_matches_player1 = get_active_matches(request)
+    matches = get_active_matches(request)
     context = {'bricks':all_b.ab,
                 'board':generate_board(),
                 'turn':all_b.turn,
@@ -234,7 +234,7 @@ def game(request):
                 'player1':json.dumps(request.session['player1']),
                 'player1pk':request.session['player1']['pk'],
                 'player1name':request.session['player1']['username'],
-                'matches_player1':active_matches_player1,
+                'matches':matches,
                 'game_id':request.session['game_id']
                 }
 
