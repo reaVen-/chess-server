@@ -19,7 +19,7 @@
 			var xhttp = new XMLHttpRequest(); 
 			xhttp.onreadystatechange = function() {
 				if (xhttp.readyState == 4 & xhttp.status == 200) {
-					console.log(xhttp.responseText)
+					$('#matches').innerHTML = xhttp.responseText;
 				}
 			};
 
@@ -113,7 +113,9 @@
 					</div>
 				</div>
 			{% else %}
-				{% include 'home/matches.html' %}
+				<div id="matches">
+					{% include 'home/matches.html' %}
+				</div>
 			{% endif %}
 		{% else %}
 			<p></p>
