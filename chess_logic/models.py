@@ -30,7 +30,7 @@ class ChessGame(models.Model):
 	looking_for_move = models.BooleanField(default=False)
 
 	def save(self, *args, **kwargs):
-		Super(ChessGame, self).save(*args, **kwargs)
+		super(ChessGame, self).save(*args, **kwargs)
 		Group('user-%s' % self.player_white_pk).send({'text':'yo'})
 		Group('user-%s' % self.player_black_pk).send({'text':'yoyo'})
 
