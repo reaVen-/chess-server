@@ -135,5 +135,5 @@ def index(request):
     template = 'home/index.html'
     context = {'opponent_picker_form':OpponentPicker,
                 'challenges_player1':challenges_player1,
-                'matches_player1':matches_player1,}
+                'matches_player1':matches,}
     return render_to_response(template, context, context_instance=RequestContext(request))
