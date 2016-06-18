@@ -2,7 +2,7 @@
 
 {% block full %}
 	<script>
-	var user_id = "{{ request.session.player1|safe }}";
+	var user_id = "{{ request.session.player1.pk|safe }}";
 	var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 	var ws_home_sock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/user/" + user_id);
 
