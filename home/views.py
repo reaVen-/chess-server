@@ -41,6 +41,11 @@ def get_active_matches(request):
                 matches_player1.append((wp, bp, p1turn, game.pk))
     return matches_player1
 
+def get_matches(request):
+    print "here"
+    matches = get_active_matches(request)
+    return render("home/matches.html", {'matches':matches})
+
 
 def login_or_create_user(username, password):
     #check if user is in database

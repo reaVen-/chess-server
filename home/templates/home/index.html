@@ -7,13 +7,25 @@
 	var ws_home_sock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/user/" + user_id);
 
     ws_home_sock.onmessage = function(message) {
-        var data = JSON.parse(message.data);
         console.log("Received an update");
+        get_matches();
     };
 
     ws_home_sock.onopen = function() {
     	console.log("Opened a websocket to the server");
     }
+
+    function get_matches() {
+			var xhttp = new XMLHttpRequest(); 
+			xhttp.onreadystatechange = function() {
+				if (xhttp.readyState == 4 & xhttp.status == 200) {
+					console.log(xhttp.responseText)
+				}
+			};
+
+			xhttp.open("GET", "/get_matches/", true);
+			xhttp.send();
+		}
 
 	</script>
 	<div class="col s4">

@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^$', "home.views.index", name="index"),
     url(r'^game/', "chess_logic.views.game", name="game"),
     url(r'^ai/', "chess_logic.views.ai", name="ai"),
+    url(r'^get_matches/', "home.views.get_matches", name="get_matches")
 ]
