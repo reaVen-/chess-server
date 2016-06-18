@@ -37,8 +37,34 @@
 				</div>
 			</div>
 
-			{% include 'home/matches.html' %}
-			
+			{% if challenges_player1 %}
+				<div class="card brown darken-2">
+					<div class="card-content">
+						{% for challenge in challenges_player1 %}
+							<span>
+								<i class="material-icons">person</i>
+								{{challenge.player1.username}} har utfordret deg
+							</span>
+
+							<span class="right">
+								<form action="/" method="POST">
+									{% csrf_token %}
+									<input name="answer_challenge" hidden="true">
+									<button name= "deny" class="btn red" id="deny" type="submit" value="{{challenge.pk}}">
+										<i class="material-icons">clear</i>
+									</button>
+									<button name="accept" class="btn" id="accept" type="submit" value="{{challenge.pk}}">
+										<i class="material-icons">add</i>
+									</button>
+								</form>
+							</span>
+							
+						{% endfor %}
+					</div>
+				</div>
+			{% else %}
+			<p></p>
+			{% endif %}
 
 
 		{% else %}
@@ -75,42 +101,7 @@
 					</div>
 				</div>
 			{% else %}
-				{% if matches_player1 %}
-				<div class="card brown darken-2">
-					<div class="card-content">
-						<span class="card-title"> Aktive kamper </span><br>
-						{% for wp, bp, p1turn, game_id in matches_player1 %}
-							<ul>
-								<div>
-									<span style="color:white;font-size:22px;"> <i class="material-icons">person</i>{{wp}}</span>
-									<span> vs </span>
-									<span style="color:black;font-size:22px;"> <i class="material-icons">person</i>{{bp}} </span>
-									<span class="right">
-										<form action="/" method="POST">
-											{% csrf_token %}
-											<input name="continue_game" hidden="true" value="{{game_id}}">
-											{% if p1turn %}
-												<button class="btn green" type="submit">
-												<span> Din tur </span></button>
-											{% else %}
-												<button class="btn red" type="submit">
-												<span>Venter</span></button>
-											{% endif %}
-											
-										</form>
-									</span>
-								<div class="divider"></div>
-								</div>
-							<br>
-
-							</ul>
-						{% endfor %}
-					</div>
-				</div>
-				{% else %}
-				<p></p>
-				{% endif %}
-
+				{include 'home/matches.html' %}
 			{% endif %}
 		{% else %}
 			<p></p>
