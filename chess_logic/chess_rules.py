@@ -99,7 +99,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
             #check if right tower is there
             if sb.get("H8", "") == "Trn" and castling_right:
                 #check if path is clear for castling
-                if empty(["E8, F8, G8"], hb, sb):
+                if empty(["E8", "F8", "G8"], hb, sb):
                     #check if king can move without getting in chess
                     if castling(["D8E8", "E8F8", "F8G8"], sb, hb, hb, sb):
                         legal_moves_list.append("G8")
