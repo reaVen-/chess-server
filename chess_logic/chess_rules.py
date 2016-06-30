@@ -54,6 +54,7 @@ def empty(positions, hb, sb, s=""):
 
 def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False):
     """returns a list of legal moves from brick"""
+    print castling_left, castling_right
     kind = pb.get(brick, "z")[0]
     index = brick_to_index(brick)
     legal_moves_list = []
