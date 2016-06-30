@@ -71,6 +71,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
         if hb == pb:
             #check if left tower is there
             if hb.get("A1", "") == "Trn" and castling_left:
+                print "checking for castling left white"
                 #check if path is clear for castling
                 if empty(["C1", "B1"], hb, sb):
                     print "empty white left"
@@ -81,6 +82,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
                 
             #check if right tower is there
             if hb.get("H1", "") == "Trn" and castling_right:
+                print "checking for castling right white"
                 #check if path is clear for castling
                 if empty(["E1", "F1", "G1"], hb, sb):
                     print "empty white right"
@@ -93,6 +95,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
         elif sb == pb:
             #check if left tower is there
             if sb.get("A8", "") == "Trn" and castling_left:
+                print "checking for castling left black"
                 #check if path is clear for castling
                 if empty(["C8", "B8"], hb, sb):
                     print "empty black left"
@@ -102,6 +105,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
                         legal_moves_list.append("B8")
             #check if right tower is there
             if sb.get("H8", "") == "Trn" and castling_right:
+                print "checking for castling right black"
                 #check if path is clear for castling
                 if empty(["E8", "F8", "G8"], hb, sb):
                     print "empty black right"
