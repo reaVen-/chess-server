@@ -83,14 +83,14 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
                 if empty(["E1", "F1", "G1"], hb, sb):
                     #check if king can move without getting in chess
                     if castling(["D1E1", "E1F1", "F1G1"], hb, sb, hb, sb):
-                        legal_moves_list.append("G1")
+                        legal_moves_list.append("F1")
 
         #check if its black turn
         elif sb == pb:
             #check if left tower is there
             if sb.get("A8", "") == "Trn" and castling_left:
                 #check if path is clear for castling
-                if empty(["B8", "C8"], hb, sb):
+                if empty(["C8", "B8"], hb, sb):
                     #check if king can move without getting in chess
                     if castling(["D8C8", "C8B8"], sb, hb, hb, sb):
                         legal_moves_list.append("B8")
@@ -100,7 +100,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
                 if empty(["E8", "F8", "G8"], hb, sb):
                     #check if king can move without getting in chess
                     if castling(["D8E8", "E8F8", "F8G8"], sb, hb, hb, sb):
-                        legal_moves_list.append("G8")
+                        legal_moves_list.append("F8")
 
         #castle code
         delta = [(-1, 0),(1, 0),(1, 1),(0, 1),(-1, 1),(1, -1),(0, -1),(-1,-1)]
