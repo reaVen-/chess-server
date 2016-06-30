@@ -76,6 +76,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
                 if empty(["C1", "B1"], hb, sb):
                     #check if king can move without getting in chess
                     if castling(["D1C1", "C1B1"], hb, sb, hb, sb):
+                        print "appended castling left for white to legal moves"
                         legal_moves_list.append("B1")
                 
             #check if right tower is there
@@ -84,6 +85,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
                 if empty(["E1", "F1", "G1"], hb, sb):
                     #check if king can move without getting in chess
                     if castling(["D1E1", "E1F1", "F1G1"], hb, sb, hb, sb):
+                        print "appended castling right for white to legal moves"
                         legal_moves_list.append("F1")
 
         #check if its black turn
@@ -94,6 +96,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
                 if empty(["C8", "B8"], hb, sb):
                     #check if king can move without getting in chess
                     if castling(["D8C8", "C8B8"], sb, hb, hb, sb):
+                        print "appended castling left for black to legal moves"
                         legal_moves_list.append("B8")
             #check if right tower is there
             if sb.get("H8", "") == "Trn" and castling_right:
@@ -101,6 +104,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
                 if empty(["E8", "F8", "G8"], hb, sb):
                     #check if king can move without getting in chess
                     if castling(["D8E8", "E8F8", "F8G8"], sb, hb, hb, sb):
+                        print "appended castling right for black to legal moves"
                         legal_moves_list.append("F8")
 
         #castle code
