@@ -31,6 +31,7 @@ def get_adjacent(brick):
 
 def castling(moves, pb, ob, hb, sb):
     for move in moves:
+        print "in castling"
         if hb == pb:
             _pb, _ob = hb, sb
             _pb, _ob = make_new(move[:2], move[2:], _pb, _ob)
