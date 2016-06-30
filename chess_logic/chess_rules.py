@@ -54,7 +54,6 @@ def empty(positions, hb, sb, s=""):
 
 def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False):
     """returns a list of legal moves from brick"""
-    print castling_left, castling_right
     kind = pb.get(brick, "z")[0]
     index = brick_to_index(brick)
     legal_moves_list = []
@@ -74,6 +73,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
             if hb.get("A1", "") == "Trn" and castling_left:
                 #check if path is clear for castling
                 if empty(["C1", "B1"], hb, sb):
+                    print "empty white left"
                     #check if king can move without getting in chess
                     if castling(["D1C1", "C1B1"], hb, sb, hb, sb):
                         print "appended castling left for white to legal moves"
@@ -83,6 +83,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
             if hb.get("H1", "") == "Trn" and castling_right:
                 #check if path is clear for castling
                 if empty(["E1", "F1", "G1"], hb, sb):
+                    print "empty white right"
                     #check if king can move without getting in chess
                     if castling(["D1E1", "E1F1", "F1G1"], hb, sb, hb, sb):
                         print "appended castling right for white to legal moves"
@@ -94,6 +95,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
             if sb.get("A8", "") == "Trn" and castling_left:
                 #check if path is clear for castling
                 if empty(["C8", "B8"], hb, sb):
+                    print "empty black left"
                     #check if king can move without getting in chess
                     if castling(["D8C8", "C8B8"], sb, hb, hb, sb):
                         print "appended castling left for black to legal moves"
@@ -102,6 +104,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
             if sb.get("H8", "") == "Trn" and castling_right:
                 #check if path is clear for castling
                 if empty(["E8", "F8", "G8"], hb, sb):
+                    print "empty black right"
                     #check if king can move without getting in chess
                     if castling(["D8E8", "E8F8", "F8G8"], sb, hb, hb, sb):
                         print "appended castling right for black to legal moves"
