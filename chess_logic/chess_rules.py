@@ -74,7 +74,7 @@ def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False
             #check if left tower is there
             if hb.get("A1", "") == "Trn" and castling_left:
                 #check if path is clear for castling
-                if empty(["C1", "B1"]):
+                if empty(["C1", "B1"], hb, sb):
                     #check if king can move without getting in chess
                     if castling(["D1C1", "C1B1"], hb, sb, hb, sb):
                         legal_moves_list.append("B1")
