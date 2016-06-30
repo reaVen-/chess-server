@@ -30,19 +30,18 @@ def get_adjacent(brick):
     return [upper_r, upper_l, lower_r, lower_l]
 
 def castling(moves, pb, ob, hb, sb):
-    for move in moves:
-        print "in castling"
-        if hb == pb:
-            _pb, _ob = hb.copy(), sb.copy()
+    if hb == pb:
+        _pb, _ob = hb, sb
+        for move in moves:
             _pb, _ob = make_new(move[:2], move[2:], _pb, _ob)
             if check(_pb, _ob, _pb, _ob):
                 return False
-        else:
-            _pb, _ob = sb.copy(), hb.copy()
+    else:
+        _pb, _ob = sb, hb
+        for move in moves:
             _pb, _ob = make_new(move[:2], move[2:], _pb, _ob)
             if check(_pb, _ob, _ob, _pb):
                 return False
-
     return True
 
 def empty(positions, hb, sb, s=""):
