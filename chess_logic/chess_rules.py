@@ -48,8 +48,8 @@ def empty(positions, hb, sb, s=""):
     for position in positions:
         s += hb.get(position, "") + sb.get(position, "")
     if s:
-        return True
-    return False
+        return False
+    return True
 
 
 def legal_moves(brick, pb, ob, hb, sb, castling_left=False, castling_right=False):
