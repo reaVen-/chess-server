@@ -44,11 +44,9 @@ def castling(moves, pb, ob, hb, sb):
 
     return True
 
-def empty(positions, hb, sb):
-    s = ""
+def empty(positions, hb, sb, s=""):
     for position in positions:
-        s.append(hb.get(position, ""))
-        s.append(sb.get(position, ""))
+        s += hb.get(position) + sb.get(position)
     if s:
         return True
     return False
