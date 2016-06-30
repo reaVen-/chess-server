@@ -34,12 +34,12 @@ def castling(moves, pb, ob, hb, sb):
         if hb == pb:
             _pb, _ob = hb, sb
             _pb, _ob = make_new(move[:2], move[2:], _pb, _ob)
-            if not check(_pb, _ob, _pb, _ob):
+            if check(_pb, _ob, _pb, _ob):
                 return False
         else:
             _pb, _ob = sb, hb
             _pb, _ob = make_new(move[:2], move[2:], _pb, _ob)
-            if not check(_pb, _ob, _ob, _pb):
+            if check(_pb, _ob, _ob, _pb):
                 return False
 
     return True
